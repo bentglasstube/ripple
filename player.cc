@@ -31,8 +31,6 @@ void Player::update(const Map& map, unsigned int elapsed) {
   updatey(map, elapsed);
 
   vx_ *= kDampen;
-
-  if (on_spikes(map)) dead_ = true;
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
@@ -66,6 +64,10 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   graphics.draw_rect(&crx, 0xff0000ff, false);
   graphics.draw_rect(&cry, 0x800000ff, false);
 #endif
+}
+
+void Player::kill() {
+  dead_ = true;
 }
 
 double Player::x() const {

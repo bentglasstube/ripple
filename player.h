@@ -14,6 +14,7 @@ class Player {
     void init(double x, double y);
     void update(const Map& map, unsigned int elapsed);
     void draw(Graphics& graphics, int xo, int yo) const;
+    void kill();
 
     double x() const;
     double y() const;

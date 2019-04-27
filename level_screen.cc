@@ -30,6 +30,17 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
   p1_.update(map_, elapsed);
   p2_.update(map_, elapsed);
 
+  if (p1_.on_spikes(map_)) {
+    p1_.kill();
+    // TODO grant powerup to p2;
+  }
+
+  if (p2_.on_spikes(map_)) {
+    p2_.kill();
+    // TODO grant powerup to p1;
+  }
+
+
   if (p1_.dead() && p2_.dead()) {
     load_level();
   } else if (p1_.done(map_) && p2_.done(map_)) {
