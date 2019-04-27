@@ -3,8 +3,7 @@
 #include <cmath>
 
 Player::Player(bool inverted) :
-  Character(inverted),
-  chars_("chars.png", 4, kWidth, kHeight), text_("text.png"),
+  Character("chars.png", kHeight, inverted), text_("text.png"),
   vx_(0), vy_(0), ax_(0),
   grounded_(false), big_jump_(false),
   timer_(0), powerup_timer_(0),
@@ -39,9 +38,7 @@ void Player::update(const Map& map, unsigned int elapsed) {
 void Player::draw(Graphics& graphics, int xo, int yo) const {
   if (dead_) return;
 
-  const int x = x_ - xo - kHalfWidth;
-  const int y = y_ - yo - (inverted_ ? 0 : kHeight);
-  chars_.draw_ex(graphics, sprite(), x, y, facing_ == Facing::Left, 0, 0, 0);
+  Character::draw(graphics, xo, yo);
 
 #ifndef NDEBUG
   const Rect h = boxh();

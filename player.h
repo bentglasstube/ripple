@@ -37,7 +37,6 @@ class Player : public Character {
     static constexpr int kHalfWidth = kWidth / 2;
     static constexpr int kHeight = 32;
 
-    SpriteMap chars_;
     Text text_;
     double vx_, vy_, ax_;
     bool grounded_, big_jump_;
