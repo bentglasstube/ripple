@@ -31,7 +31,6 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
   if (p1_.dead() && p2_.dead()) {
     load_level("level1.txt");
   } else if (p1_.done(map_) && p2_.done(map_)) {
-    // next level
     return false;
   }
 

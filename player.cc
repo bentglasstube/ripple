@@ -19,10 +19,13 @@ void Player::init(double x, double y) {
   dead_ = false;
   grounded_ = false;
   facing_ = Facing::Right;
+  timer_ = 0;
 }
 
 void Player::update(const Map& map, unsigned int elapsed) {
   if (dead_) return;
+
+  timer_ += elapsed;
 
   updatex(map, elapsed);
   updatey(map, elapsed);
@@ -50,7 +53,7 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
 
   const int x = x_ - xo - kHalfWidth;
   const int y = y_ - yo - (inverted_ ? 0 : kHeight);
-  chars_.draw_ex(graphics, inverted_ ? 4 : 0, x, y, facing_ == Facing::Left, 0, 0, 0);
+  chars_.draw_ex(graphics, sprite(), x, y, facing_ == Facing::Left, 0, 0, 0);
 
 #ifndef NDEBUG
   const Rect h = boxh();
@@ -189,4 +192,12 @@ Rect Player::boxv() const {
   } else {
     return Rect(x_ - kHalfWidth + 2, y_ - kHeight, x_ + kHalfWidth - 2, y_);
   }
+}
+
+int Player::sprite() const {
+  if (inverted_ && vy_ > 0) return 7;
+  if (!inverted_ && vy_ < 0) return 3;
+
+  if (std::abs(vx_) > 0.01) return (timer_ / 200) % 3 + (inverted_ ? 4 : 0);
+  return inverted_ ? 4 : 0;
 }

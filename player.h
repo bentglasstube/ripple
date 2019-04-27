@@ -43,6 +43,7 @@ class Player {
     double x_, y_, vx_, vy_, ax_;
     bool grounded_, dead_, inverted_;
     Facing facing_;
+    int timer_;
 
 #ifndef NDEBUG
     SDL_Rect xcol_, ycol_;
@@ -52,4 +53,5 @@ class Player {
     void updatey(const Map& map, unsigned int elapsed);
     Rect boxh() const;
     Rect boxv() const;
+    int sprite() const;
 };
