@@ -42,7 +42,7 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
 
 
   if (p1_.dead() && p2_.dead()) {
-    load_level();
+    return false;
   } else if (p1_.done(map_) && p2_.done(map_)) {
     gs_.next_level();
     return false;
