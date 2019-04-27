@@ -32,20 +32,7 @@ void Player::update(const Map& map, unsigned int elapsed) {
 
   vx_ *= kDampen;
 
-  const Map::Tile t = map.tile(x_, y_);
-  switch (t.type) {
-    case Map::TileType::Spikes:
-      if (!inverted_) dead_ = true;
-      break;
-
-    case Map::TileType::InvSpikes:
-      if (inverted_) dead_ = true;
-      break;
-
-    default:
-      // do nothing
-      break;
-  }
+  if (on_spikes(map)) dead_ = true;
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
@@ -121,6 +108,13 @@ void Player::stop_moving() {
 
 void Player::jump() {
   if (grounded()) vy_ += kJumpSpeed * (inverted_ ? 1 : -1);
+}
+
+bool Player::on_spikes(const Map& map) const {
+  const Map::Tile t = map.tile(x_, y_);
+  if (t.type == Map::TileType::Spikes) return !inverted_;
+  if (t.type == Map::TileType::InvSpikes) return inverted_;
+  return false;
 }
 
 void Player::updatex(const Map& map, unsigned int elapsed) {

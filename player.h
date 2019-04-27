@@ -26,6 +26,8 @@ class Player {
     void stop_moving();
     void jump();
 
+    bool on_spikes(const Map& map) const;
+
   private:
 
     static constexpr double kGravity = 0.003;
