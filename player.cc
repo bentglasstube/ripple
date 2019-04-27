@@ -13,13 +13,32 @@ Player::Player(bool inverted) :
 {}
 
 void Player::update(const Map& map, unsigned int elapsed) {
+  if (dead_) return;
+
   updatex(map, elapsed);
   updatey(map, elapsed);
 
   vx_ *= kDampen;
+
+  const Map::Tile t = map.tile(x_, y_);
+  switch (t.type) {
+    case Map::TileType::Spikes:
+      if (!inverted_) dead_ = true;
+      break;
+
+    case Map::TileType::InvSpikes:
+      if (inverted_) dead_ = true;
+      break;
+
+    default:
+      // do nothing
+      break;
+  }
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
+  if (dead_) return;
+
   const int x = x_ - xo - kHalfWidth;
   const int y = y_ - yo - (inverted_ ? 0 : kHeight);
   chars_.draw_ex(graphics, inverted_ ? 4 : 0, x, y, facing_ == Facing::Left, 0, 0, 0);
