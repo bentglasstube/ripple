@@ -2,6 +2,7 @@
 
 #include "graphics.h"
 #include "spritemap.h"
+#include "text.h"
 
 #include "map.h"
 #include "rect.h"
@@ -45,10 +46,12 @@ class Player {
     enum class Facing { Right, Left };
 
     SpriteMap chars_;
+    Text text_;
     double x_, y_, vx_, vy_, ax_;
     bool grounded_, dead_, inverted_, big_jump_;
     Facing facing_;
-    int timer_;
+    int timer_, powerup_timer_;
+    std::string powerup_text_;
 
 #ifndef NDEBUG
     SDL_Rect xcol_, ycol_;

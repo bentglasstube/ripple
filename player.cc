@@ -3,11 +3,13 @@
 #include <cmath>
 
 Player::Player(bool inverted) :
-  chars_("chars.png", 4, kWidth, kHeight),
+  chars_("chars.png", 4, kWidth, kHeight), text_("text.png"),
   x_(0), y_(0), vx_(0), vy_(0), ax_(0),
   grounded_(false), dead_(false), inverted_(inverted),
   big_jump_(false),
-  facing_(Facing::Right)
+  facing_(Facing::Right),
+  timer_(0), powerup_timer_(0),
+  powerup_text_("")
 #ifndef NDEBUG
   , xcol_({0, 0, 0, 0}), ycol_({0, 0, 0, 0})
 #endif
@@ -17,17 +19,17 @@ void Player::init(double x, double y) {
   x_ = x;
   y_ = y;
   vx_ = vy_ = ax_ = 0;
-  dead_ = false;
-  grounded_ = false;
-  big_jump_ = false;
+  dead_ = grounded_ = big_jump_ = false;
   facing_ = Facing::Right;
-  timer_ = 0;
+  timer_ = powerup_timer_ = 0;
+  powerup_text_ = "";
 }
 
 void Player::update(const Map& map, unsigned int elapsed) {
-  if (dead_) return;
-
+  if (powerup_timer_ > 0) powerup_timer_ -= elapsed;
   timer_ += elapsed;
+
+  if (dead_) return;
 
   updatex(map, elapsed);
   updatey(map, elapsed);
@@ -66,6 +68,10 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   graphics.draw_rect(&crx, 0xff0000ff, false);
   graphics.draw_rect(&cry, 0x800000ff, false);
 #endif
+
+  if (powerup_timer_ > 0) {
+    text_.draw(graphics, powerup_text_, 128, inverted_ ? 200 : 24, Text::Alignment::Center);
+  }
 }
 
 double Player::x() const {
@@ -113,6 +119,8 @@ void Player::jump() {
 }
 
 bool Player::on_spikes(const Map& map) const {
+  if (dead_) return false;
+
   const Map::Tile t = map.tile(x_, y_);
   if (t.type == Map::TileType::Spikes) return !inverted_;
   if (t.type == Map::TileType::InvSpikes) return inverted_;
@@ -125,6 +133,8 @@ void Player::kill() {
 
 void Player::grant_big_jump() {
   big_jump_ = true;
+  powerup_timer_ = 2500;
+  powerup_text_ = "Big Jump";
 }
 
 void Player::updatex(const Map& map, unsigned int elapsed) {
