@@ -11,6 +11,7 @@ class Player {
 
     Player(bool inverted);
 
+    void init(double x, double y);
     void update(const Map& map, unsigned int elapsed);
     void draw(Graphics& graphics, int xo, int yo) const;
 
@@ -18,8 +19,6 @@ class Player {
     double y() const;
     bool grounded() const;
     bool dead() const;
-
-    void set_position(double x, double y);
 
     void move_left();
     void move_right();

@@ -12,6 +12,15 @@ Player::Player(bool inverted) :
 #endif
 {}
 
+void Player::init(double x, double y) {
+  x_ = x;
+  y_ = y;
+  vx_ = vy_ = ax_ = 0;
+  dead_ = false;
+  grounded_ = false;
+  facing_ = Facing::Right;
+}
+
 void Player::update(const Map& map, unsigned int elapsed) {
   if (dead_) return;
 
@@ -83,11 +92,6 @@ bool Player::grounded() const {
 
 bool Player::dead() const {
   return dead_;
-}
-
-void Player::set_position(double x, double y) {
-  x_ = x;
-  y_ = y;
 }
 
 void Player::move_left() {
