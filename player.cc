@@ -94,6 +94,14 @@ bool Player::dead() const {
   return dead_;
 }
 
+bool Player::done(const Map& map) const {
+  if (dead_) return true;
+  const Map::Tile t = map.tile(x(), y() + (inverted_ ? 2 : -2));
+  if (!inverted_ && t.type == Map::TileType::DoorBottom) return true;
+  if (inverted_ && t.type == Map::TileType::InvDoorBottom) return true;
+  return false;
+}
+
 void Player::move_left() {
   facing_ = Facing::Left;
   ax_ = -kAccel;

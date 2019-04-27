@@ -29,9 +29,10 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
   p2_.update(map_, elapsed);
 
   if (p1_.dead() && p2_.dead()) {
-    // restart level
     load_level("level1.txt");
-  } else if (true) {
+  } else if (p1_.done(map_) && p2_.done(map_)) {
+    // next level
+    return false;
   }
 
 
@@ -42,6 +43,9 @@ void LevelScreen::draw(Graphics& graphics) const {
   map_.draw(graphics, 0, 0);
   p1_.draw(graphics, 0, 0);
   p2_.draw(graphics, 0, 0);
+
+  if (p1_.done(map_)) text_.draw(graphics, "1", 0, 0);
+  if (p2_.done(map_)) text_.draw(graphics, "2", 8, 0);
 }
 
 void LevelScreen::load_level(const std::string& level) {

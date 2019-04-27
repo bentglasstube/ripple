@@ -19,6 +19,7 @@ class Player {
     double y() const;
     bool grounded() const;
     bool dead() const;
+    bool done(const Map& map) const;
 
     void move_left();
     void move_right();
