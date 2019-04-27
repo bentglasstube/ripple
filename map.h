@@ -8,6 +8,7 @@ class Map {
   public:
 
     enum class TileType {
+      Nothing, OutOfBounds,
       Empty, Spikes, DoorBottom, DoorTop,
       InvEmpty, InvSpikes, InvDoorBottom, InvDoorTop,
     };
@@ -33,8 +34,6 @@ class Map {
 
     double startx() const;
     double starty() const;
-
-    bool out_of_bounds(double x, double y) const;
 
   private:
 

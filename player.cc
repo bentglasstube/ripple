@@ -104,7 +104,7 @@ void Player::updatex(const Map& map, unsigned int elapsed) {
     };
 #endif
     x_ = vx_ > 0 ? tile.left - kHalfWidth : tile.right + kHalfWidth;
-    vx_ = -vx_ * 0.5;
+    vx_ = 0;
   } else {
     x_ += vx_ * elapsed;
   }
@@ -117,7 +117,7 @@ void Player::updatey(const Map& map, unsigned int elapsed) {
   Map::Tile tile = map.collision(boxv(), 0, vy_ * elapsed, inverted_);
   if (tile.obstructs(inverted_)) {
 #ifndef NDEBUG
-    xcol_ = {
+    ycol_ = {
       (int) tile.left,
       (int) tile.top,
       (int) (tile.right - tile.left),

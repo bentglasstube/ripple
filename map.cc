@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 Map::Map() :
   tileset_("level.png", 4, kTileSize, kTileSize),
@@ -71,12 +72,12 @@ Map::Tile Map::tile(double x, double y) const {
 
 Map::Tile Map::collision(Rect r, double dx, double dy, bool inverted) const {
   if (dx != 0) {
-    const int x = (int) ((dx < 0 ? r.left : r.right) + dx) / kTileSize;
+    const int x = (int) std::floor(((dx < 0 ? r.left : r.right) + dx) / kTileSize);
     return check_tiles(x, x, (int) r.top / kTileSize, (int) r.bottom / kTileSize, inverted);
   }
 
   if (dy != 0) {
-    const int y = (int) ((dy < 0 ? r.top : r.bottom) + dy) / kTileSize;
+    const int y = (int) std::floor(((dy < 0 ? r.top : r.bottom) + dy) / kTileSize);
     return check_tiles((int) r.left / kTileSize, (int) r.right / kTileSize, y, y, inverted);
   }
 
@@ -91,17 +92,11 @@ int Map::pixel_height() const {
   return height_ * kTileSize;
 }
 
-bool Map::out_of_bounds(double x, double y) const {
-  const int px = (int) x / kTileSize;
-  const int py = (int) y / kTileSize;
-  return px < 0 || px > width_ || py < 0 || py > height_;
-}
-
 Map::Tile Map::itile(int x, int y) const {
   Tile tile;
 
   if (x < 0 || x >= width_ || y < 0 || y >= height_) {
-    tile.type = TileType::Empty;
+    tile.type = TileType::OutOfBounds;
   } else {
     tile.type = tiles_[y][x];
   }
@@ -127,15 +122,16 @@ Map::Tile Map::check_tiles(int x1, int x2, int y1, int y2, bool inverted) const 
 
 bool Map::Tile::obstructs(bool inverted) const {
   switch (type) {
+    case Map::TileType::OutOfBounds:    return true;
     case Map::TileType::Empty:          return inverted;
-    case Map::TileType::Spikes:         return !inverted;
+    case Map::TileType::Spikes:         return inverted;
     case Map::TileType::DoorBottom:     return inverted;
     case Map::TileType::DoorTop:        return inverted;
     case Map::TileType::InvEmpty:       return !inverted;
-    case Map::TileType::InvSpikes:      return inverted;
+    case Map::TileType::InvSpikes:      return !inverted;
     case Map::TileType::InvDoorBottom:  return !inverted;
     case Map::TileType::InvDoorTop:     return !inverted;
-    default: return 0;
+    default: return false;
   }
 }
 
