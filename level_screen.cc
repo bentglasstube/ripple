@@ -32,12 +32,12 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
 
   if (p1_.on_spikes(map_)) {
     p1_.kill();
-    // TODO grant powerup to p2;
+    p2_.grant_big_jump();
   }
 
   if (p2_.on_spikes(map_)) {
     p2_.kill();
-    // TODO grant powerup to p1;
+    p1_.grant_big_jump();
   }
 
 

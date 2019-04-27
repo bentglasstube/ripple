@@ -6,6 +6,7 @@ Player::Player(bool inverted) :
   chars_("chars.png", 4, kWidth, kHeight),
   x_(0), y_(0), vx_(0), vy_(0), ax_(0),
   grounded_(false), dead_(false), inverted_(inverted),
+  big_jump_(false),
   facing_(Facing::Right)
 #ifndef NDEBUG
   , xcol_({0, 0, 0, 0}), ycol_({0, 0, 0, 0})
@@ -66,10 +67,6 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
 #endif
 }
 
-void Player::kill() {
-  dead_ = true;
-}
-
 double Player::x() const {
   return x_;
 }
@@ -109,7 +106,9 @@ void Player::stop_moving() {
 }
 
 void Player::jump() {
-  if (grounded()) vy_ += kJumpSpeed * (inverted_ ? 1 : -1);
+  if (grounded()) {
+    vy_ += kJumpSpeed * (inverted_ ? 1 : -1) * (big_jump_ ? 1.3 : 1);
+  }
 }
 
 bool Player::on_spikes(const Map& map) const {
@@ -117,6 +116,14 @@ bool Player::on_spikes(const Map& map) const {
   if (t.type == Map::TileType::Spikes) return !inverted_;
   if (t.type == Map::TileType::InvSpikes) return inverted_;
   return false;
+}
+
+void Player::kill() {
+  dead_ = true;
+}
+
+void Player::grant_big_jump() {
+  big_jump_ = true;
 }
 
 void Player::updatex(const Map& map, unsigned int elapsed) {

@@ -14,7 +14,6 @@ class Player {
     void init(double x, double y);
     void update(const Map& map, unsigned int elapsed);
     void draw(Graphics& graphics, int xo, int yo) const;
-    void kill();
 
     double x() const;
     double y() const;
@@ -28,6 +27,9 @@ class Player {
     void jump();
 
     bool on_spikes(const Map& map) const;
+
+    void kill();
+    void grant_big_jump();
 
   private:
 
@@ -44,7 +46,7 @@ class Player {
 
     SpriteMap chars_;
     double x_, y_, vx_, vy_, ax_;
-    bool grounded_, dead_, inverted_;
+    bool grounded_, dead_, inverted_, big_jump_;
     Facing facing_;
     int timer_;
 
