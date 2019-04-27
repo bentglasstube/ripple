@@ -19,6 +19,7 @@ void Player::init(double x, double y) {
   vx_ = vy_ = ax_ = 0;
   dead_ = false;
   grounded_ = false;
+  big_jump_ = false;
   facing_ = Facing::Right;
   timer_ = 0;
 }
