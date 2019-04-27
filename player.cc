@@ -111,7 +111,7 @@ void Player::updatex(const Map& map, unsigned int elapsed) {
 }
 
 void Player::updatey(const Map& map, unsigned int elapsed) {
-  vy_ += kGravity * elapsed * (inverted_ ? -1 : 1);
+  /* vy_ += kGravity * elapsed * (inverted_ ? -1 : 1); */
   grounded_ = false;
 
   Map::Tile tile = map.collision(boxv(), 0, vy_ * elapsed, inverted_);
@@ -124,13 +124,22 @@ void Player::updatey(const Map& map, unsigned int elapsed) {
       (int) (tile.bottom - tile.top)
     };
 #endif
-    if (vy_ > 0) {
-      y_ = tile.top;
-      grounded_ = true;
+    if (inverted_) {
+      if (vy_ > 0) {
+        y_ = tile.top - kHeight;
+      } else {
+        y_ = tile.bottom;
+        grounded_ = true;
+      }
     } else {
-      y_ = tile.bottom + kHeight;
+      if (vy_ > 0) {
+        y_ = tile.top;
+        grounded_ = true;
+      } else {
+        y_ = tile.bottom + kHeight;
+      }
+      vy_ = 0;
     }
-    vy_ = 0;
   } else {
     y_ += vy_ * elapsed;
   }

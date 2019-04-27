@@ -28,7 +28,7 @@ class Player {
 
   private:
 
-    static constexpr double kGravity = 0.003;
+    static constexpr double kGravity = 0.0003;
     static constexpr double kJumpSpeed = 0.8;
     static constexpr double kAccel = 0.001;
     static constexpr double kDampen = 0.85;

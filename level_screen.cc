@@ -1,7 +1,7 @@
 #include "level_screen.h"
 
 LevelScreen::LevelScreen(GameState state) :
-  gs_(state), sprites_("level.png", 4, 16, 16), map_(), player_(false) {}
+  gs_(state), sprites_("level.png", 4, 16, 16), map_(), player_(true) {}
 
 bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   if (input.key_held(Input::Button::Left)) {
