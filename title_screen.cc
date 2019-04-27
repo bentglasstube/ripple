@@ -22,6 +22,5 @@ void TitleScreen::draw(Graphics& graphics) const {
 
 Screen* TitleScreen::next_screen() const {
   LevelScreen* s = new LevelScreen(gs_);
-  s->load_level("level1.txt");
   return s;
 }

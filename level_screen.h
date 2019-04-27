@@ -18,7 +18,7 @@ class LevelScreen : public Screen {
     bool update(const Input& input, Audio& audio, unsigned int elapsed) override;
     void draw(Graphics& graphics) const override;
 
-    void load_level(const std::string& level);
+    void load_level();
 
     Screen* next_screen() const override;
 
