@@ -1,0 +1,6 @@
+bazel-*
+ripple-*.zip
+ripple-*.tgz
+*.app
+gam
+output
