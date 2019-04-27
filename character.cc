@@ -1,8 +1,8 @@
 #include "character.h"
 
-Character::Character(const std::string& file, int height, bool inverted) :
+Character::Character(const std::string& file, int height, bool inverted, double x, double y) :
   sprites_(file, 4, 16, height),
-  height_(height), x_(0), y_(0),
+  height_(height), x_(x), y_(y),
   inverted_(inverted), dead_(false),
   facing_(Facing::Right) {}
 

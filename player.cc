@@ -3,7 +3,7 @@
 #include <cmath>
 
 Player::Player(bool inverted, double x, double y) :
-  Character("chars.png", kHeight, inverted), text_("text.png"),
+  Character("chars.png", kHeight, inverted, x, y), text_("text.png"),
   vx_(0), vy_(0), ax_(0),
   grounded_(false), big_jump_(false),
   timer_(0), powerup_timer_(0),
@@ -11,10 +11,7 @@ Player::Player(bool inverted, double x, double y) :
 #ifndef NDEBUG
   , xcol_({0, 0, 0, 0}), ycol_({0, 0, 0, 0})
 #endif
-{
-  x_ = x;
-  y_ = y;
-}
+{}
 
 void Player::update(const Map& map, unsigned int elapsed) {
   if (powerup_timer_ > 0) powerup_timer_ -= elapsed;
