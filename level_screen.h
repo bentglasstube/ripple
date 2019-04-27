@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "graphics.h"
 #include "input.h"
 #include "screen.h"
@@ -18,8 +20,6 @@ class LevelScreen : public Screen {
     bool update(const Input& input, Audio& audio, unsigned int elapsed) override;
     void draw(Graphics& graphics) const override;
 
-    void load_level();
-
     Screen* next_screen() const override;
 
   private:
@@ -29,5 +29,6 @@ class LevelScreen : public Screen {
     SpriteMap sprites_;
     Map map_;
     Player p1_, p2_;
+    std::vector<Character> enemies_;
     bool control_inverted_;
 };

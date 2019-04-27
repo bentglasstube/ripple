@@ -7,9 +7,8 @@
 class Player : public Character {
   public:
 
-    Player(bool inverted);
+    Player(bool inverted, double x, double y);
 
-    void init(double x, double y);
     void update(const Map& map, unsigned int elapsed) override;
     void draw(Graphics& graphics, int xo, int yo) const override;
 
@@ -51,5 +50,5 @@ class Player : public Character {
     void updatey(const Map& map, unsigned int elapsed);
     Rect boxh() const;
     Rect boxv() const;
-    int sprite() const;
+    int sprite() const override;
 };

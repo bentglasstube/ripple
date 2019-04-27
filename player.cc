@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-Player::Player(bool inverted) :
+Player::Player(bool inverted, double x, double y) :
   Character("chars.png", kHeight, inverted), text_("text.png"),
   vx_(0), vy_(0), ax_(0),
   grounded_(false), big_jump_(false),
@@ -11,16 +11,9 @@ Player::Player(bool inverted) :
 #ifndef NDEBUG
   , xcol_({0, 0, 0, 0}), ycol_({0, 0, 0, 0})
 #endif
-{}
-
-void Player::init(double x, double y) {
+{
   x_ = x;
   y_ = y;
-  vx_ = vy_ = ax_ = 0;
-  dead_ = grounded_ = big_jump_ = false;
-  facing_ = Facing::Right;
-  timer_ = powerup_timer_ = 0;
-  powerup_text_ = "";
 }
 
 void Player::update(const Map& map, unsigned int elapsed) {
