@@ -1,11 +1,56 @@
 #include "level_screen.h"
 
+#include <iostream>
+#include <fstream>
+
 LevelScreen::LevelScreen(GameState state) :
   gs_(state),
   text_("text.png"), sprites_("level.png", 4, 16, 16),
-  map_(), p1_(false, 16, 96), p2_(true, 16, 96)
+  map_(), p1_(false, 16, 96), p2_(true, 16, 96),
+  control_inverted_(false)
+
 {
-  map_.load("level" + std::to_string(gs_.level()) + ".txt");
+  const std::string level_file = "content/level" + std::to_string(gs_.level()) + ".txt";
+  std::ifstream reader(level_file);
+
+  int width = 0;
+  int height = 0;
+
+  std::string line;
+  while (reader) {
+    std::getline(reader, line);
+    const size_t l = line.length();
+    if (width == 0) width = l;
+    for (size_t x = 0; x < l; ++x) {
+      switch (line[x]) {
+        case ' ':
+          map_.set_tile(x, height, Map::TileType::Empty);
+          break;
+
+        case '.':
+          map_.set_tile(x, height, Map::TileType::InvEmpty);
+          break;
+
+        case '^':
+          map_.set_tile(x, height, Map::TileType::Spikes);
+          break;
+
+        case 'v':
+          map_.set_tile(x, height, Map::TileType::InvSpikes);
+          break;
+
+        case '+':
+          map_.set_tile(x, height, Map::TileType::DoorTop);
+          break;
+
+        case '-':
+          map_.set_tile(x, height, Map::TileType::InvDoorBottom);
+          break;
+      }
+    }
+    ++height;
+    map_.set_size(width, height);
+  }
 }
 
 bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {

@@ -1,54 +1,8 @@
 #include "map.h"
 
-#include <iostream>
-#include <fstream>
 #include <cmath>
 
-Map::Map() :
-  tileset_("level.png", 4, kTileSize, kTileSize),
-  width_(0), height_(0) {}
-
-void Map::load(const std::string& file) {
-  std::ifstream reader("content/" + file);
-  width_ = height_ = 0;
-
-  std::string line;
-  while (reader) {
-    std::getline(reader, line);
-    const size_t l = line.length();
-    if (width_ == 0) width_ = l;
-    for (size_t x = 0; x < l; ++x) {
-      TileType& t = tiles_[height_][x];
-
-      switch (line[x]) {
-        case ' ':
-          t = TileType::Empty;
-          break;
-
-        case '.':
-          t = TileType::InvEmpty;
-          break;
-
-        case '^':
-          t = TileType::Spikes;
-          break;
-
-        case 'v':
-          t = TileType::InvSpikes;
-          break;
-
-        case '+':
-          t = itile(x, height_ - 1).type == TileType::DoorTop ? TileType::DoorBottom : TileType::DoorTop;
-          break;
-
-        case '-':
-          t = itile(x, height_ - 1).type == TileType::InvDoorBottom ? TileType::InvDoorTop : TileType::InvDoorBottom;
-          break;
-      }
-    }
-    ++height_;
-  }
-}
+Map::Map() : tileset_("level.png", 4, kTileSize, kTileSize), width_(0), height_(0) {}
 
 void Map::draw(Graphics& graphics, int xo, int yo) const {
   for (int y = 0; y < height_; ++y) {
@@ -84,12 +38,23 @@ Map::Tile Map::collision(Rect r, double dx, double dy, bool inverted) const {
   return kNullTile;
 }
 
-int Map::pixel_width() const {
-  return width_ * kTileSize;
+void Map::set_size(int width, int height) {
+  width_ = width;
+  height_ = height;
 }
 
-int Map::pixel_height() const {
-  return height_ * kTileSize;
+void Map::set_tile(int x, int y, TileType type) {
+  if (y < 0 || y > 128) return;
+  if (x < 0 || x > 1024) return;
+
+  if (type == TileType::DoorTop || type == TileType::InvDoorBottom) {
+    if (itile(x, y - 1).type == type) {
+      if (type == TileType::DoorTop) type = TileType::DoorBottom;
+      if (type == TileType::InvDoorBottom) type = TileType::InvDoorTop;
+    }
+  }
+
+  tiles_[y][x] = type;
 }
 
 Map::Tile Map::itile(int x, int y) const {

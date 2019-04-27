@@ -23,17 +23,13 @@ class Map {
 
     Map();
 
-    void load(const std::string& file);
     void draw(Graphics& graphics, int xo, int yo) const;
 
     Tile tile(double x, double y) const;
     Tile collision(Rect box, double dx, double dy, bool inverted) const;
 
-    int pixel_width() const;
-    int pixel_height() const;
-
-    double startx() const;
-    double starty() const;
+    void set_size(int width, int height);
+    void set_tile(int x, int y, TileType type);
 
   private:
 
