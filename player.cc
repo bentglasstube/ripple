@@ -17,7 +17,6 @@ void Player::update(const Map& map, unsigned int elapsed) {
   updatey(map, elapsed);
 
   vx_ *= kDampen;
-  vy_ *= kDampen;
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
@@ -111,7 +110,7 @@ void Player::updatex(const Map& map, unsigned int elapsed) {
 }
 
 void Player::updatey(const Map& map, unsigned int elapsed) {
-  /* vy_ += kGravity * elapsed * (inverted_ ? -1 : 1); */
+  vy_ += kGravity * elapsed * (inverted_ ? -1 : 1);
   grounded_ = false;
 
   Map::Tile tile = map.collision(boxv(), 0, vy_ * elapsed, inverted_);
@@ -138,8 +137,8 @@ void Player::updatey(const Map& map, unsigned int elapsed) {
       } else {
         y_ = tile.bottom + kHeight;
       }
-      vy_ = 0;
     }
+    vy_ = 0;
   } else {
     y_ += vy_ * elapsed;
   }
@@ -147,12 +146,16 @@ void Player::updatey(const Map& map, unsigned int elapsed) {
 
 Rect Player::boxh() const {
   if (inverted_) {
-    return Rect(x_ - kHalfWidth, y_ + kHeight - 4, x_ + kHalfWidth, y_ + 4);
+    return Rect(x_ - kHalfWidth, y_ + 4, x_ + kHalfWidth, y_ + kHeight - 4);
   } else {
     return Rect(x_ - kHalfWidth, y_ - kHeight + 4, x_ + kHalfWidth, y_ - 4);
   }
 }
 
 Rect Player::boxv() const {
-  return Rect(x_ - kHalfWidth + 2, y_ - kHeight * (inverted_ ? -1 : 1), x_ + kHalfWidth - 2, y_);
+  if (inverted_) {
+    return Rect(x_ - kHalfWidth + 2, y_, x_ + kHalfWidth - 2, y_ + kHeight);
+  } else {
+    return Rect(x_ - kHalfWidth + 2, y_ - kHeight, x_ + kHalfWidth - 2, y_);
+  }
 }

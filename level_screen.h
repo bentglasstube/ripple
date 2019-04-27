@@ -4,6 +4,7 @@
 #include "input.h"
 #include "screen.h"
 #include "spritemap.h"
+#include "text.h"
 
 #include "game_state.h"
 #include "map.h"
@@ -24,7 +25,9 @@ class LevelScreen : public Screen {
   private:
 
     GameState gs_;
+    Text text_;
     SpriteMap sprites_;
     Map map_;
-    Player player_;
+    Player p1_, p2_;
+    bool control_inverted_;
 };
