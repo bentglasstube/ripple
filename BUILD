@@ -70,7 +70,7 @@ cc_library(
         "@libgam//:text",
         ":game_state",
         ":map",
-        ":player",
+        ":characters",
     ],
 )
 
@@ -91,9 +91,15 @@ cc_library(
 )
 
 cc_library(
-    name = "player",
-    srcs = ["player.cc"],
-    hdrs = ["player.h"],
+    name = "characters",
+    srcs = [
+        "character.cc",
+        "player.cc",
+    ],
+    hdrs = [
+        "character.h",
+        "player.h"
+    ],
     deps = [
         "@libgam//:graphics",
         "@libgam//:spritemap",
@@ -102,4 +108,3 @@ cc_library(
         ":rect",
     ],
 )
-

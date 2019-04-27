@@ -1,25 +1,19 @@
 #pragma once
 
-#include "graphics.h"
-#include "spritemap.h"
 #include "text.h"
 
-#include "map.h"
-#include "rect.h"
+#include "character.h"
 
-class Player {
+class Player : public Character {
   public:
 
     Player(bool inverted);
 
     void init(double x, double y);
-    void update(const Map& map, unsigned int elapsed);
-    void draw(Graphics& graphics, int xo, int yo) const;
+    void update(const Map& map, unsigned int elapsed) override;
+    void draw(Graphics& graphics, int xo, int yo) const override;
 
-    double x() const;
-    double y() const;
     bool grounded() const;
-    bool dead() const;
     bool done(const Map& map) const;
 
     void move_left();
@@ -43,13 +37,10 @@ class Player {
     static constexpr int kHalfWidth = kWidth / 2;
     static constexpr int kHeight = 32;
 
-    enum class Facing { Right, Left };
-
     SpriteMap chars_;
     Text text_;
-    double x_, y_, vx_, vy_, ax_;
-    bool grounded_, dead_, inverted_, big_jump_;
-    Facing facing_;
+    double vx_, vy_, ax_;
+    bool grounded_, big_jump_;
     int timer_, powerup_timer_;
     std::string powerup_text_;
 

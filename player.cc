@@ -3,11 +3,10 @@
 #include <cmath>
 
 Player::Player(bool inverted) :
+  Character(inverted),
   chars_("chars.png", 4, kWidth, kHeight), text_("text.png"),
-  x_(0), y_(0), vx_(0), vy_(0), ax_(0),
-  grounded_(false), dead_(false), inverted_(inverted),
-  big_jump_(false),
-  facing_(Facing::Right),
+  vx_(0), vy_(0), ax_(0),
+  grounded_(false), big_jump_(false),
   timer_(0), powerup_timer_(0),
   powerup_text_("")
 #ifndef NDEBUG
@@ -74,20 +73,8 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   }
 }
 
-double Player::x() const {
-  return x_;
-}
-
-double Player::y() const {
-  return y_;
-}
-
 bool Player::grounded() const {
   return grounded_;
-}
-
-bool Player::dead() const {
-  return dead_;
 }
 
 bool Player::done(const Map& map) const {
