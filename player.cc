@@ -65,10 +65,6 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   }
 }
 
-bool Player::grounded() const {
-  return grounded_;
-}
-
 bool Player::done(const Map& map) const {
   if (dead_) return true;
   const Map::Tile t = map.tile(x(), y() + (inverted_ ? 2 : -2));

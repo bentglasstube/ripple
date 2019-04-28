@@ -32,7 +32,7 @@ PartyScreen::PartyScreen(GameState state) : text_("text.png"), gs_(state) {
   }
 }
 
-bool PartyScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+bool PartyScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   std::uniform_real_distribution<double> p(0, 1);
 
   for (auto& peep : peeps_) {

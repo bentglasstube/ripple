@@ -9,7 +9,7 @@
 LevelScreen::LevelScreen(GameState state) :
   gs_(state),
   text_("text.png"), sprites_("level.png", 4, 16, 16),
-  map_(), p1_(false, 16, 96), p2_(true, 16, 96),
+  camera_(), map_(), p1_(false, 16, 96), p2_(true, 16, 96),
   control_inverted_(false)
 {
   const std::string level_file = "content/level" + std::to_string(gs_.level()) + ".txt";
@@ -75,7 +75,7 @@ LevelScreen::LevelScreen(GameState state) :
   map_.set_size(width, height - 1);
 }
 
-bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   gs_.add_time(elapsed);
 
   if (input.key_pressed(Input::Button::Select)) {
@@ -83,6 +83,8 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
   }
 
   Player& p = control_inverted_ ? p2_ : p1_;
+
+  camera_.update(p, map_, elapsed);
 
   p1_.stop_moving();
   p2_.stop_moving();
@@ -145,12 +147,12 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
 }
 
 void LevelScreen::draw(Graphics& graphics) const {
-  map_.draw(graphics, 0, 0);
-  p1_.draw(graphics, 0, 0);
-  p2_.draw(graphics, 0, 0);
+  map_.draw(graphics, camera_.xoffset(), camera_.yoffset());
+  p1_.draw(graphics, camera_.xoffset(), camera_.yoffset());
+  p2_.draw(graphics, camera_.xoffset(), camera_.yoffset());
 
   for (const auto& enemy : enemies_) {
-    enemy.draw(graphics, 0, 0);
+    enemy.draw(graphics, camera_.xoffset(), camera_.yoffset());
   }
 }
 

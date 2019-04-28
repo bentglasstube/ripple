@@ -6,6 +6,7 @@
 #include "spritemap.h"
 #include "text.h"
 
+#include "camera.h"
 #include "enemy.h"
 #include "game_state.h"
 #include "map.h"
@@ -26,6 +27,7 @@ class LevelScreen : public Screen {
     GameState gs_;
     Text text_;
     SpriteMap sprites_;
+    Camera camera_;
     Map map_;
     Player p1_, p2_;
     std::vector<Enemy> enemies_;

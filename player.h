@@ -15,7 +15,6 @@ class Player : public Character {
     void update(const Map& map, unsigned int elapsed) override;
     void draw(Graphics& graphics, int xo, int yo) const override;
 
-    bool grounded() const;
     bool done(const Map& map) const;
 
     void move_left();

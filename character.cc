@@ -29,6 +29,10 @@ bool Character::dead() const {
   return dead_;
 }
 
+bool Character::grounded() const {
+  return grounded_;
+}
+
 Rect Character::hitbox() const {
   if (inverted_) {
     return Rect(x_ - 8, y_, x_ + 8, y_ + height_);

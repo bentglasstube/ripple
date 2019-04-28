@@ -21,6 +21,7 @@ class Character {
     double x() const;
     double y() const;
     bool dead() const;
+    bool grounded() const;
 
     virtual Rect hitbox() const;
     bool collision(const Rect& other) const;

@@ -57,6 +57,14 @@ void Map::set_tile(int x, int y, TileType type) {
   tiles_[y][x] = type;
 }
 
+int Map::pixel_width() const {
+  return width_ * kTileSize;
+}
+
+int Map::pixel_height() const {
+  return height_ * kTileSize;
+}
+
 Map::Tile Map::itile(int x, int y) const {
   Tile tile;
 

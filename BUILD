@@ -71,9 +71,10 @@ cc_library(
         "@libgam//:screen",
         "@libgam//:text",
         "@libgam//:util",
+        ":camera",
+        ":characters",
         ":game_state",
         ":map",
-        ":characters",
     ],
 )
 
@@ -113,5 +114,15 @@ cc_library(
         "@libgam//:text",
         ":map",
         ":rect",
+    ],
+)
+
+cc_library(
+    name = "camera",
+    srcs = ["camera.cc"],
+    hdrs = ["camera.h"],
+    deps = [
+        ":characters",
+        ":map",
     ],
 )

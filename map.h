@@ -31,6 +31,9 @@ class Map {
     void set_size(int width, int height);
     void set_tile(int x, int y, TileType type);
 
+    int pixel_width() const;
+    int pixel_height() const;
+
   private:
 
     static constexpr int kTileSize = 16;
