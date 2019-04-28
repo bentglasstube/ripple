@@ -87,6 +87,13 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
 
   for (auto& enemy : enemies_) {
     enemy.update(map_, elapsed);
+    if (enemy.collision(p1_.hitbox())) {
+      p1_.kill();
+      // p2_.grant_fireballs();
+    } else if (enemy.collision(p2_.hitbox())) {
+      p2_.kill();
+      // p1_.grant_fireballs();
+    }
   }
 
   if (p1_.on_spikes(map_)) {
@@ -98,7 +105,6 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
     p2_.kill();
     p1_.grant_big_jump();
   }
-
 
   if (p1_.dead() && p2_.dead()) {
     return false;

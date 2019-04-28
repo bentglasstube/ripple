@@ -25,6 +25,8 @@ class Player : public Character {
     void kill();
     void grant_big_jump();
 
+    Rect hitbox() const override;
+
   private:
 
     static constexpr double kGravity = 0.003;

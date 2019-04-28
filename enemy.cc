@@ -32,3 +32,18 @@ int Enemy::sprite() const {
       return 0;
   }
 }
+
+Rect Enemy::hitbox() const {
+  switch (type_) {
+    case Type::Goomba:
+      return inverted_ ? Rect(x_ - 5, y_ + 1, x_ + 5, y_ + 11) :
+        Rect(x_ - 5, y_ - 11, x_ + 5, y_ - 1);
+
+    case Type::Spark:
+      return inverted_ ? Rect(x_ - 3, y_ + 3, x_ + 3, y_ + 13) :
+        Rect(x_ - 3, y_ - 13, x_ + 3, y_ - 3);
+
+    default:
+      return Character::hitbox();
+  }
+}

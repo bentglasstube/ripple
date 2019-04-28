@@ -111,6 +111,11 @@ void Player::grant_big_jump() {
   powerup_text_ = "Big Jump";
 }
 
+Rect Player::hitbox() const {
+  return inverted_ ? Rect(x_ - 4, y_, x_ + 4, y_ + 26) :
+    Rect(x_ - 4, y_ - 26, x_ + 4, y_);
+}
+
 void Player::updatex(const Map& map, unsigned int elapsed) {
   vx_ += ax_ * elapsed;
 
@@ -167,19 +172,13 @@ void Player::updatey(const Map& map, unsigned int elapsed) {
 }
 
 Rect Player::boxh() const {
-  if (inverted_) {
-    return Rect(x_ - kHalfWidth, y_ + 4, x_ + kHalfWidth, y_ + kHeight - 4);
-  } else {
-    return Rect(x_ - kHalfWidth, y_ - kHeight + 4, x_ + kHalfWidth, y_ - 4);
-  }
+  return inverted_ ? Rect(x_ - kHalfWidth, y_ + 4, x_ + kHalfWidth, y_ + kHeight - 4) :
+    Rect(x_ - kHalfWidth, y_ - kHeight + 4, x_ + kHalfWidth, y_ - 4);
 }
 
 Rect Player::boxv() const {
-  if (inverted_) {
-    return Rect(x_ - kHalfWidth + 2, y_, x_ + kHalfWidth - 2, y_ + kHeight);
-  } else {
-    return Rect(x_ - kHalfWidth + 2, y_ - kHeight, x_ + kHalfWidth - 2, y_);
-  }
+  return inverted_ ? Rect(x_ - kHalfWidth + 4, y_, x_ + kHalfWidth - 4, y_ + kHeight) :
+    Rect(x_ - kHalfWidth + 4, y_ - kHeight, x_ + kHalfWidth - 4, y_);
 }
 
 int Player::sprite() const {

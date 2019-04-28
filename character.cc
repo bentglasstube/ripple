@@ -8,7 +8,13 @@ Character::Character(const std::string& file, int height, bool inverted, double 
 
 void Character::draw(Graphics& graphics, int xo, int yo) const {
   if (dead_) return;
-  sprites_.draw_ex(graphics, sprite(), drawx(), drawy(), facing_ == Facing::Left, 0, 0, 0);
+  sprites_.draw_ex(graphics, sprite(), drawx() - xo, drawy() - yo, facing_ == Facing::Left, 0, 0, 0);
+
+#ifndef NDEBUG
+  const Rect hb = hitbox();
+  const SDL_Rect r = { (int) hb.left, (int) hb.top, (int) (hb.right - hb.left), (int) (hb.bottom - hb.top) };
+  graphics.draw_rect(&r, 0xffff0080, false);
+#endif
 }
 
 double Character::x() const {
@@ -21,6 +27,18 @@ double Character::y() const {
 
 bool Character::dead() const {
   return dead_;
+}
+
+Rect Character::hitbox() const {
+  if (inverted_) {
+    return Rect(x_ - 8, y_, x_ + 8, y_ + height_);
+  } else {
+    return Rect(x_ - 8, y_ - height_, x_ + 8, y_);
+  }
+}
+
+bool Character::collision(const Rect& other) const {
+  return hitbox().intersect(other);
 }
 
 void Character::flip() {

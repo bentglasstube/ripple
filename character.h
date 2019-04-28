@@ -20,6 +20,9 @@ class Character {
     double y() const;
     bool dead() const;
 
+    virtual Rect hitbox() const;
+    bool collision(const Rect& other) const;
+
     void flip();
 
   protected:

@@ -20,4 +20,5 @@ class Enemy : public Character {
     int timer_;
 
     int sprite() const override;
+    Rect hitbox() const override;
 };
