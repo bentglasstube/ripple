@@ -23,6 +23,10 @@ bool Character::dead() const {
   return dead_;
 }
 
+void Character::flip() {
+  facing_ = facing_ == Facing::Left ? Facing::Right : Facing::Left;
+}
+
 int Character::drawx() const {
   return x_ - 8;
 }

@@ -8,7 +8,6 @@ LevelScreen::LevelScreen(GameState state) :
   text_("text.png"), sprites_("level.png", 4, 16, 16),
   map_(), p1_(false, 16, 96), p2_(true, 16, 96),
   control_inverted_(false)
-
 {
   const std::string level_file = "content/level" + std::to_string(gs_.level()) + ".txt";
   std::ifstream reader(level_file);
@@ -46,6 +45,16 @@ LevelScreen::LevelScreen(GameState state) :
         case '-':
           map_.set_tile(x, height, Map::TileType::InvDoorBottom);
           break;
+
+        case 'g':
+        case 'G':
+          {
+            const bool i = line[x] == 'G';
+            map_.set_tile(x, height, i ? Map::TileType::InvEmpty : Map::TileType::Empty);
+            enemies_.emplace_back(Enemy::Type::Goomba, i, x * 16 + 8, height * 16 + (i ? 0 : 16));
+          }
+
+          break;
       }
     }
     ++height;
@@ -76,6 +85,10 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
   p1_.update(map_, elapsed);
   p2_.update(map_, elapsed);
 
+  for (auto& enemy : enemies_) {
+    enemy.update(map_, elapsed);
+  }
+
   if (p1_.on_spikes(map_)) {
     p1_.kill();
     p2_.grant_big_jump();
@@ -102,8 +115,9 @@ void LevelScreen::draw(Graphics& graphics) const {
   p1_.draw(graphics, 0, 0);
   p2_.draw(graphics, 0, 0);
 
-  if (p1_.done(map_)) text_.draw(graphics, "1", 0, 0);
-  if (p2_.done(map_)) text_.draw(graphics, "2", 8, 0);
+  for (const auto& enemy : enemies_) {
+    enemy.draw(graphics, 0, 0);
+  }
 }
 
 Screen* LevelScreen::next_screen() const {

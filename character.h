@@ -20,6 +20,8 @@ class Character {
     double y() const;
     bool dead() const;
 
+    void flip();
+
   protected:
 
     enum class Facing { Right, Left };

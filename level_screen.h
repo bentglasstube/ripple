@@ -8,6 +8,7 @@
 #include "spritemap.h"
 #include "text.h"
 
+#include "enemy.h"
 #include "game_state.h"
 #include "map.h"
 #include "player.h"
@@ -29,6 +30,6 @@ class LevelScreen : public Screen {
     SpriteMap sprites_;
     Map map_;
     Player p1_, p2_;
-    std::vector<Character> enemies_;
+    std::vector<Enemy> enemies_;
     bool control_inverted_;
 };
