@@ -68,6 +68,7 @@ cc_library(
         "party_screen.h",
     ],
     deps = [
+        "@libgam//:backdrop",
         "@libgam//:screen",
         "@libgam//:text",
         "@libgam//:util",
