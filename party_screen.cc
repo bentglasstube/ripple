@@ -57,7 +57,12 @@ bool PartyScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
     f.update(map_, elapsed);
   }
 
-  return !input.key_pressed(Input::Button::Start);
+  if (input.key_pressed(Input::Button::Start)) {
+    audio.stop_music();
+    return false;
+  }
+
+  return true;
 }
 
 void PartyScreen::draw(Graphics& graphics) const {

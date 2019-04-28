@@ -4,3 +4,4 @@ ripple-*.tgz
 *.app
 gam
 output
+res/*.mmpz.bak
