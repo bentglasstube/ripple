@@ -89,13 +89,19 @@ bool Map::Tile::obstructs(bool inverted) const {
   switch (type) {
     case Map::TileType::OutOfBounds:    return true;
     case Map::TileType::Empty:          return inverted;
+    case Map::TileType::Bricks:         return true;
+    case Map::TileType::Neutral:        return false;
     case Map::TileType::Spikes:         return inverted;
     case Map::TileType::DoorBottom:     return inverted;
     case Map::TileType::DoorTop:        return inverted;
+    case Map::TileType::BlockOn:        return true;
+    case Map::TileType::BlockOff:       return inverted;
     case Map::TileType::InvEmpty:       return !inverted;
     case Map::TileType::InvSpikes:      return !inverted;
     case Map::TileType::InvDoorBottom:  return !inverted;
     case Map::TileType::InvDoorTop:     return !inverted;
+    case Map::TileType::InvBlockOn:     return true;
+    case Map::TileType::InvBlockOff:    return !inverted;
     default: return false;
   }
 }
@@ -103,13 +109,19 @@ bool Map::Tile::obstructs(bool inverted) const {
 int Map::Tile::sprite() const {
   switch (type) {
     case Map::TileType::Empty:          return 0;
-    case Map::TileType::Spikes:         return 3;
-    case Map::TileType::DoorBottom:     return 6;
+    case Map::TileType::BlockOff:       return 1;
     case Map::TileType::DoorTop:        return 2;
-    case Map::TileType::InvEmpty:       return 12;
-    case Map::TileType::InvSpikes:      return 15;
+    case Map::TileType::Spikes:         return 3;
+    case Map::TileType::Bricks:         return 4;
+    case Map::TileType::BlockOn:        return 5;
+    case Map::TileType::DoorBottom:     return 6;
+    case Map::TileType::Neutral:        return 8;
+    case Map::TileType::InvBlockOn:     return 9;
     case Map::TileType::InvDoorBottom:  return 10;
+    case Map::TileType::InvEmpty:       return 12;
+    case Map::TileType::InvBlockOff:    return 13;
     case Map::TileType::InvDoorTop:     return 14;
+    case Map::TileType::InvSpikes:      return 15;
     default: return 0;
   }
 }

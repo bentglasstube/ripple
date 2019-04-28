@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "party_screen.h"
+
 LevelScreen::LevelScreen(GameState state) :
   gs_(state),
   text_("text.png"), sprites_("level.png", 4, 16, 16),
@@ -133,7 +135,7 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
   if (p1_.dead() && p2_.dead()) {
     return false;
   } else if (p1_.done(map_) && p2_.done(map_)) {
-    gs_.next_level();
+    gs_.next_level(!p1_.dead(), !p2_.dead());
     return false;
   }
 
@@ -151,5 +153,6 @@ void LevelScreen::draw(Graphics& graphics) const {
 }
 
 Screen* LevelScreen::next_screen() const {
+  if (gs_.level() > 4) return new PartyScreen(gs_);
   return new LevelScreen(gs_);
 }

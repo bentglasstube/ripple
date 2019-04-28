@@ -11,6 +11,8 @@
 class Character {
   public:
 
+    enum class Facing { Right, Left };
+
     Character(const std::string& file, int height, bool inverted, double x, double y);
 
     virtual void update(const Map& map, unsigned int elapsed) = 0;
@@ -27,8 +29,6 @@ class Character {
     void kill();
 
   protected:
-
-    enum class Facing { Right, Left };
 
     int width_, height_;
     double x_, y_, vx_, vy_;

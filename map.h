@@ -8,9 +8,9 @@ class Map {
   public:
 
     enum class TileType {
-      Nothing, OutOfBounds,
-      Empty, Spikes, DoorBottom, DoorTop,
-      InvEmpty, InvSpikes, InvDoorBottom, InvDoorTop,
+      Nothing, OutOfBounds, Bricks, Neutral,
+      Empty, Spikes, DoorBottom, DoorTop, BlockOn, BlockOff,
+      InvEmpty, InvSpikes, InvDoorBottom, InvDoorTop, InvBlockOn, InvBlockOff,
     };
 
     struct Tile {

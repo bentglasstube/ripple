@@ -60,14 +60,17 @@ cc_library(
     srcs = [
         "title_screen.cc",
         "level_screen.cc",
+        "party_screen.cc",
     ],
     hdrs = [
         "title_screen.h",
         "level_screen.h",
+        "party_screen.h",
     ],
     deps = [
         "@libgam//:screen",
         "@libgam//:text",
+        "@libgam//:util",
         ":game_state",
         ":map",
         ":characters",

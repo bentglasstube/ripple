@@ -1,20 +1,18 @@
 #pragma once
 
+#include <random>
 #include <vector>
 
 #include "screen.h"
-#include "spritemap.h"
-#include "text.h"
 
-#include "enemy.h"
 #include "game_state.h"
 #include "map.h"
 #include "player.h"
 
-class LevelScreen : public Screen {
+class PartyScreen : public Screen {
   public:
 
-    LevelScreen(GameState state);
+    PartyScreen(GameState state);
 
     bool update(const Input& input, Audio& audio, unsigned int elapsed) override;
     void draw(Graphics& graphics) const override;
@@ -24,10 +22,8 @@ class LevelScreen : public Screen {
   private:
 
     GameState gs_;
-    Text text_;
-    SpriteMap sprites_;
     Map map_;
-    Player p1_, p2_;
-    std::vector<Enemy> enemies_;
-    bool control_inverted_;
+    std::vector<Player> peeps_;
+    std::vector<Fireball> fireworks_;
+    std::mt19937 rand_;
 };
