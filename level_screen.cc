@@ -33,6 +33,10 @@ LevelScreen::LevelScreen(GameState state) :
           map_.set_tile(x, height, Map::TileType::InvEmpty);
           break;
 
+        case '=':
+          map_.set_tile(x, height, Map::TileType::Bricks);
+          break;
+
         case '^':
           map_.set_tile(x, height, Map::TileType::Spikes);
           break;
@@ -157,6 +161,6 @@ void LevelScreen::draw(Graphics& graphics) const {
 }
 
 Screen* LevelScreen::next_screen() const {
-  if (gs_.level() > 4) return new PartyScreen(gs_);
+  if (gs_.level() > 5) return new PartyScreen(gs_);
   return new LevelScreen(gs_);
 }
