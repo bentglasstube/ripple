@@ -193,6 +193,6 @@ void LevelScreen::draw(Graphics& graphics) const {
 }
 
 Screen* LevelScreen::next_screen() const {
-  if (gs_.level() > 6) return new PartyScreen(gs_);
+  if (gs_.level() > 20) return new PartyScreen(gs_);
   return new LevelScreen(gs_);
 }

@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-GameState::GameState() : level_(7) {}
+GameState::GameState() : level_(9) {}
 
 void GameState::next_level(bool normal, bool invert) {
   assert(normal || invert);

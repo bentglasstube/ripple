@@ -102,10 +102,17 @@ void Player::shoot() {
 bool Player::on_spikes(const Map& map) const {
   if (dead_) return false;
 
-  const Map::Tile t = map.tile(x_, y_);
-  if (t.type == Map::TileType::Spikes) return !inverted_;
-  if (t.type == Map::TileType::InvSpikes) return inverted_;
-  return false;
+  const Rect r = hitbox();
+
+  if (inverted_) {
+    const Map::Tile t1 = map.tile(r.left, r.top + 4);
+    const Map::Tile t2 = map.tile(r.right, r.top + 4);
+    return t1.type == Map::TileType::InvSpikes || t2.type == Map::TileType::InvSpikes;
+  } else {
+    const Map::Tile t1 = map.tile(r.left, r.bottom - 4);
+    const Map::Tile t2 = map.tile(r.right, r.bottom - 4);
+    return t1.type == Map::TileType::Spikes || t2.type == Map::TileType::Spikes;
+  }
 }
 
 bool Player::at_switch(const Map& map) const {

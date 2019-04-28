@@ -12,7 +12,7 @@ void Character::draw(Graphics& graphics, int xo, int yo) const {
 
 #ifndef NDEBUG
   const Rect hb = hitbox();
-  const SDL_Rect r = { (int) hb.left, (int) hb.top, (int) (hb.right - hb.left), (int) (hb.bottom - hb.top) };
+  const SDL_Rect r = { (int) hb.left - xo, (int) hb.top - yo, (int) (hb.right - hb.left), (int) (hb.bottom - hb.top) };
   graphics.draw_rect(&r, 0xffff0080, false);
 #endif
 }
