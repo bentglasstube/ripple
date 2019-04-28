@@ -24,6 +24,7 @@ class Player : public Character {
     void shoot();
 
     bool on_spikes(const Map& map) const;
+    bool at_switch(const Map& map) const;
     bool check_fireballs(const Rect& r) const;
 
     void grant_big_jump();

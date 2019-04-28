@@ -108,6 +108,22 @@ bool Player::on_spikes(const Map& map) const {
   return false;
 }
 
+bool Player::at_switch(const Map& map) const {
+  if (dead_) return false;
+
+  const Rect r = hitbox();
+
+  if (inverted_) {
+    const Map::Tile t1 = map.tile(r.left, r.bottom);
+    const Map::Tile t2 = map.tile(r.right, r.bottom);
+    return t1.type == Map::TileType::InvSwitch || t2.type == Map::TileType::InvSwitch;
+  } else {
+    const Map::Tile t1 = map.tile(r.left, r.top);
+    const Map::Tile t2 = map.tile(r.right, r.top);
+    return t1.type == Map::TileType::Switch || t2.type == Map::TileType::Switch;
+  }
+}
+
 bool Player::check_fireballs(const Rect& r) const {
   for (auto& b : bullets_) {
     if (b.collision(r)) return true;

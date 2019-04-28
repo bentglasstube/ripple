@@ -53,6 +53,30 @@ LevelScreen::LevelScreen(GameState state) :
           map_.set_tile(x, height, Map::TileType::InvDoorBottom);
           break;
 
+        case '!':
+          map_.set_tile(x, height, Map::TileType::Switch);
+          break;
+
+        case 'i':
+          map_.set_tile(x, height, Map::TileType::InvSwitch);
+          break;
+
+        case 'o':
+          map_.set_tile(x, height, Map::TileType::BlockOff);
+          break;
+
+        case 'O':
+          map_.set_tile(x, height, Map::TileType::InvBlockOff);
+          break;
+
+        case 'x':
+          map_.set_tile(x, height, Map::TileType::BlockOn);
+          break;
+
+        case 'X':
+          map_.set_tile(x, height, Map::TileType::InvBlockOn);
+          break;
+
         case 'g':
         case 'G':
           {
@@ -60,7 +84,6 @@ LevelScreen::LevelScreen(GameState state) :
             map_.set_tile(x, height, i ? Map::TileType::InvEmpty : Map::TileType::Empty);
             enemies_.emplace_back(Enemy::Type::Goomba, i, x * 16 + 8, height * 16 + (i ? 0 : 16));
           }
-
           break;
 
         case 's':
@@ -70,6 +93,7 @@ LevelScreen::LevelScreen(GameState state) :
             map_.set_tile(x, height, i ? Map::TileType::InvEmpty : Map::TileType::Empty);
             enemies_.emplace_back(Enemy::Type::Spark, i, x * 16 + 8, height * 16 + (i ? 0 : 16));
           }
+          break;
 
       }
     }
@@ -104,7 +128,11 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   }
 
   if (input.key_pressed(Input::Button::B)) {
-    p.shoot();
+    if (p.at_switch(map_)) {
+      map_.toggle_blocks();
+    } else {
+      p.shoot();
+    }
   }
 
   p1_.update(map_, elapsed);
@@ -158,9 +186,13 @@ void LevelScreen::draw(Graphics& graphics) const {
   for (const auto& enemy : enemies_) {
     enemy.draw(graphics, camera_.xoffset(), camera_.yoffset());
   }
+
+  if (p1_.at_switch(map_)) text_.draw(graphics, "1!", 0, 0);
+  if (p2_.at_switch(map_)) text_.draw(graphics, "2!", 0, 0);
+
 }
 
 Screen* LevelScreen::next_screen() const {
-  if (gs_.level() > 5) return new PartyScreen(gs_);
+  if (gs_.level() > 6) return new PartyScreen(gs_);
   return new LevelScreen(gs_);
 }

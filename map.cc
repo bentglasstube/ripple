@@ -57,6 +57,18 @@ void Map::set_tile(int x, int y, TileType type) {
   tiles_[y][x] = type;
 }
 
+void Map::toggle_blocks() {
+  for (int y = 0; y < height_; ++y) {
+    for (int x = 0; x < width_; ++x) {
+      TileType& t = tiles_[y][x];
+      if (t == TileType::BlockOff) t = TileType::BlockOn;
+      else if (t == TileType::BlockOn) t = TileType::BlockOff;
+      else if (t == TileType::InvBlockOff) t = TileType::InvBlockOn;
+      else if (t == TileType::InvBlockOn) t = TileType::InvBlockOff;
+    }
+  }
+}
+
 int Map::pixel_width() const {
   return width_ * kTileSize;
 }
@@ -96,20 +108,25 @@ Map::Tile Map::check_tiles(int x1, int x2, int y1, int y2, bool inverted) const 
 bool Map::Tile::obstructs(bool inverted) const {
   switch (type) {
     case Map::TileType::OutOfBounds:    return true;
-    case Map::TileType::Empty:          return inverted;
     case Map::TileType::Bricks:         return true;
+    case Map::TileType::BlockOn:        return true;
+    case Map::TileType::InvBlockOn:     return true;
+
     case Map::TileType::Neutral:        return false;
+
+    case Map::TileType::Empty:          return inverted;
     case Map::TileType::Spikes:         return inverted;
     case Map::TileType::DoorBottom:     return inverted;
     case Map::TileType::DoorTop:        return inverted;
-    case Map::TileType::BlockOn:        return true;
     case Map::TileType::BlockOff:       return inverted;
+    case Map::TileType::Switch:         return inverted;
+
     case Map::TileType::InvEmpty:       return !inverted;
     case Map::TileType::InvSpikes:      return !inverted;
     case Map::TileType::InvDoorBottom:  return !inverted;
     case Map::TileType::InvDoorTop:     return !inverted;
-    case Map::TileType::InvBlockOn:     return true;
     case Map::TileType::InvBlockOff:    return !inverted;
+    case Map::TileType::InvSwitch:      return !inverted;
     default: return false;
   }
 }
@@ -123,9 +140,11 @@ int Map::Tile::sprite() const {
     case Map::TileType::Bricks:         return 4;
     case Map::TileType::BlockOn:        return 5;
     case Map::TileType::DoorBottom:     return 6;
+    case Map::TileType::Switch:         return 7;
     case Map::TileType::Neutral:        return 8;
     case Map::TileType::InvBlockOn:     return 9;
     case Map::TileType::InvDoorBottom:  return 10;
+    case Map::TileType::InvSwitch:      return 11;
     case Map::TileType::InvEmpty:       return 12;
     case Map::TileType::InvBlockOff:    return 13;
     case Map::TileType::InvDoorTop:     return 14;

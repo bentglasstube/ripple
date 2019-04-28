@@ -9,8 +9,8 @@ class Map {
 
     enum class TileType {
       Nothing, OutOfBounds, Bricks, Neutral,
-      Empty, Spikes, DoorBottom, DoorTop, BlockOn, BlockOff,
-      InvEmpty, InvSpikes, InvDoorBottom, InvDoorTop, InvBlockOn, InvBlockOff,
+      Empty, Spikes, DoorBottom, DoorTop, BlockOn, BlockOff, Switch,
+      InvEmpty, InvSpikes, InvDoorBottom, InvDoorTop, InvBlockOn, InvBlockOff, InvSwitch,
     };
 
     struct Tile {
@@ -30,6 +30,7 @@ class Map {
 
     void set_size(int width, int height);
     void set_tile(int x, int y, TileType type);
+    void toggle_blocks();
 
     int pixel_width() const;
     int pixel_height() const;
