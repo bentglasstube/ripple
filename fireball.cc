@@ -15,6 +15,7 @@ void Fireball::update(const Map& map, unsigned int elapsed) {
     dead_ = true;
   } else if (tx.obstructs(inverted_)) {
     bounceh(tx, 0.8);
+    return;
   } else {
     x_ += vx_ * elapsed;
   }
