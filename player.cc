@@ -89,10 +89,11 @@ void Player::jump() {
   }
 }
 
-void Player::shoot() {
-  if (done() || !fireballs_ || fireball_cooldown_ > 0) return;
+bool Player::shoot() {
+  if (done() || !fireballs_ || fireball_cooldown_ > 0) return false;
   bullets_.emplace_back(inverted_, x_ + (facing_ == Facing::Left ? -6 : 6), y_ + (inverted_ ? 20 : -20), facing_);
   fireball_cooldown_ = 150;
+  return true;
 }
 
 void Player::exit() {

@@ -107,11 +107,14 @@ LevelScreen::LevelScreen(GameState state) :
   map_.set_size(width, height - 1);
 }
 
-bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
+
+  if (!audio.music_playing()) audio.play_music("spooky.ogg");
 
   if (input.key_pressed(Input::Button::Select)) {
     control_inverted_ = !control_inverted_;
+    audio.play_sample("select.wav");
   }
 
   Player& p = control_inverted_ ? p2_ : p1_;
@@ -133,14 +136,18 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
   if (input.key_pressed(Input::Button::B)) {
     if (p.at_switch(map_)) {
+      audio.play_sample("switch.wav");
       map_.toggle_blocks();
-    } else {
-      p.shoot();
+    } else if (p.shoot()) {
+      audio.play_sample("fireball.wav");
     }
   }
 
   if (input.key_pressed(control_inverted_ ? Input::Button::Down : Input::Button::Up)) {
-    if (p.at_door(map_)) p.exit();
+    if (p.at_door(map_)) {
+      audio.play_sample("exit.wav");
+      p.exit();
+    }
   }
 
   p1_.update(map_, elapsed);
@@ -149,13 +156,17 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   for (auto& enemy : enemies_) {
     enemy.update(map_, elapsed);
     if (p1_.check_fireballs(enemy.hitbox())) {
+      audio.play_sample("kill.wav");
       enemy.kill();
     } else if (p2_.check_fireballs(enemy.hitbox())) {
+      audio.play_sample("kill.wav");
       enemy.kill();
     } else if (!p1_.done() && enemy.collision(p1_.hitbox())) {
+      audio.play_sample("dead.wav");
       p1_.kill();
       p2_.grant_fireballs();
     } else if (!p2_.done() && enemy.collision(p2_.hitbox())) {
+      audio.play_sample("dead.wav");
       p2_.kill();
       p1_.grant_fireballs();
     }
@@ -167,11 +178,13 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
       enemies_.end());
 
   if (p1_.on_spikes(map_)) {
+    audio.play_sample("dead.wav");
     p1_.kill();
     p2_.grant_big_jump();
   }
 
   if (p2_.on_spikes(map_)) {
+    audio.play_sample("dead.wav");
     p2_.kill();
     p1_.grant_big_jump();
   }
@@ -180,6 +193,7 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     return false;
   } else if (p1_.done() && p2_.done()) {
     gs_.next_level(!p1_.dead(), !p2_.dead());
+    if (gs_.level() > 10) audio.stop_music();
     return false;
   }
 

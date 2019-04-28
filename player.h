@@ -20,7 +20,7 @@ class Player : public Character {
     void move_right();
     void stop_moving();
     void jump();
-    void shoot();
+    bool shoot();
     void exit();
 
     bool on_spikes(const Map& map) const;
