@@ -37,6 +37,10 @@ LevelScreen::LevelScreen(GameState state) :
           map_.set_tile(x, height, Map::TileType::Bricks);
           break;
 
+        case '\'':
+          map_.set_tile(x, height, Map::TileType::Neutral);
+          break;
+
         case '^':
           map_.set_tile(x, height, Map::TileType::Spikes);
           break;
@@ -135,6 +139,10 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
+  if (input.key_pressed(control_inverted_ ? Input::Button::Down : Input::Button::Up)) {
+    if (p.at_door(map_)) p.exit();
+  }
+
   p1_.update(map_, elapsed);
   p2_.update(map_, elapsed);
 
@@ -144,10 +152,10 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
       enemy.kill();
     } else if (p2_.check_fireballs(enemy.hitbox())) {
       enemy.kill();
-    } else if (enemy.collision(p1_.hitbox())) {
+    } else if (!p1_.done() && enemy.collision(p1_.hitbox())) {
       p1_.kill();
       p2_.grant_fireballs();
-    } else if (enemy.collision(p2_.hitbox())) {
+    } else if (!p2_.done() && enemy.collision(p2_.hitbox())) {
       p2_.kill();
       p1_.grant_fireballs();
     }
@@ -170,7 +178,7 @@ bool LevelScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
   if (p1_.dead() && p2_.dead()) {
     return false;
-  } else if (p1_.done(map_) && p2_.done(map_)) {
+  } else if (p1_.done() && p2_.done()) {
     gs_.next_level(!p1_.dead(), !p2_.dead());
     return false;
   }
@@ -193,6 +201,6 @@ void LevelScreen::draw(Graphics& graphics) const {
 }
 
 Screen* LevelScreen::next_screen() const {
-  if (gs_.level() > 20) return new PartyScreen(gs_);
+  if (gs_.level() > 10) return new PartyScreen(gs_);
   return new LevelScreen(gs_);
 }

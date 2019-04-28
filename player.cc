@@ -5,7 +5,7 @@
 
 Player::Player(bool inverted, double x, double y) :
   Character("chars.png", kHeight, inverted, x, y), text_("text.png"),
-  ax_(0), big_jump_(false), fireballs_(false),
+  ax_(0), done_(false), big_jump_(false), fireballs_(false),
   timer_(0), powerup_timer_(0),
   powerup_text_("")
 #ifndef NDEBUG
@@ -18,7 +18,7 @@ void Player::update(const Map& map, unsigned int elapsed) {
   if (powerup_timer_ > 0) powerup_timer_ -= elapsed;
   if (fireball_cooldown_ > 0) fireball_cooldown_ -= elapsed;
 
-  if (dead_) return;
+  if (done()) return;
 
   updatex(map, elapsed);
   updatey(map, elapsed);
@@ -27,7 +27,7 @@ void Player::update(const Map& map, unsigned int elapsed) {
 }
 
 void Player::draw(Graphics& graphics, int xo, int yo) const {
-  if (dead_) return;
+  if (done()) return;
 
   Character::draw(graphics, xo, yo);
 
@@ -65,12 +65,8 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   }
 }
 
-bool Player::done(const Map& map) const {
-  if (dead_) return true;
-  const Map::Tile t = map.tile(x(), y() + (inverted_ ? 2 : -2));
-  if (!inverted_ && t.type == Map::TileType::DoorBottom) return true;
-  if (inverted_ && t.type == Map::TileType::InvDoorBottom) return true;
-  return false;
+bool Player::done() const {
+  return dead_ || done_;
 }
 
 void Player::move_left() {
@@ -94,13 +90,17 @@ void Player::jump() {
 }
 
 void Player::shoot() {
-  if (dead_ || !fireballs_ || fireball_cooldown_ > 0) return;
+  if (done() || !fireballs_ || fireball_cooldown_ > 0) return;
   bullets_.emplace_back(inverted_, x_ + (facing_ == Facing::Left ? -6 : 6), y_ + (inverted_ ? 20 : -20), facing_);
   fireball_cooldown_ = 150;
 }
 
+void Player::exit() {
+  done_ = true;
+}
+
 bool Player::on_spikes(const Map& map) const {
-  if (dead_) return false;
+  if (done()) return false;
 
   const Rect r = hitbox();
 
@@ -116,7 +116,7 @@ bool Player::on_spikes(const Map& map) const {
 }
 
 bool Player::at_switch(const Map& map) const {
-  if (dead_) return false;
+  if (done()) return false;
 
   const Rect r = hitbox();
 
@@ -128,6 +128,22 @@ bool Player::at_switch(const Map& map) const {
     const Map::Tile t1 = map.tile(r.left, r.top);
     const Map::Tile t2 = map.tile(r.right, r.top);
     return t1.type == Map::TileType::Switch || t2.type == Map::TileType::Switch;
+  }
+}
+
+bool Player::at_door(const Map& map) const {
+  if (done()) return false;
+
+  const Rect r = hitbox();
+
+  if (inverted_) {
+    const Map::Tile t1 = map.tile(r.left, r.bottom);
+    const Map::Tile t2 = map.tile(r.right, r.bottom);
+    return t1.type == Map::TileType::InvDoorTop || t2.type == Map::TileType::InvDoorTop;
+  } else {
+    const Map::Tile t1 = map.tile(r.left, r.top);
+    const Map::Tile t2 = map.tile(r.right, r.top);
+    return t1.type == Map::TileType::DoorTop || t2.type == Map::TileType::DoorTop;
   }
 }
 

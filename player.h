@@ -14,17 +14,18 @@ class Player : public Character {
 
     void update(const Map& map, unsigned int elapsed) override;
     void draw(Graphics& graphics, int xo, int yo) const override;
-
-    bool done(const Map& map) const;
+    bool done() const;
 
     void move_left();
     void move_right();
     void stop_moving();
     void jump();
     void shoot();
+    void exit();
 
     bool on_spikes(const Map& map) const;
     bool at_switch(const Map& map) const;
+    bool at_door(const Map& map) const;
     bool check_fireballs(const Rect& r) const;
 
     void grant_big_jump();
@@ -45,7 +46,7 @@ class Player : public Character {
 
     Text text_;
     double ax_;
-    bool big_jump_, fireballs_;
+    bool done_, big_jump_, fireballs_;
     int timer_, powerup_timer_;
     int fireball_cooldown_;
     std::string powerup_text_;
