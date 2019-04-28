@@ -14,7 +14,6 @@ void Fireball::update(const Map& map, unsigned int elapsed) {
   if (tx.type == Map::TileType::OutOfBounds) {
     dead_ = true;
   } else if (tx.obstructs(inverted_)) {
-    fprintf(stderr, "bounce! (%f, %f) (%f)\n", x_, y_, vx_);
     bounceh(tx, 0.8);
   } else {
     x_ += vx_ * elapsed;

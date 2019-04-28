@@ -56,11 +56,21 @@ LevelScreen::LevelScreen(GameState state) :
           }
 
           break;
+
+        case 's':
+        case 'S':
+          {
+            const bool i = line[x] == 'S';
+            map_.set_tile(x, height, i ? Map::TileType::InvEmpty : Map::TileType::Empty);
+            enemies_.emplace_back(Enemy::Type::Spark, i, x * 16 + 8, height * 16 + (i ? 0 : 16));
+          }
+
       }
     }
     ++height;
     map_.set_size(width, height);
   }
+  map_.set_size(width, height - 1);
 }
 
 bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {

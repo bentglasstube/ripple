@@ -21,7 +21,7 @@ void Map::draw(Graphics& graphics, int xo, int yo) const {
 }
 
 Map::Tile Map::tile(double x, double y) const {
-  return itile((int)(x / kTileSize), (int)(y / kTileSize));
+  return itile((int)std::floor(x / kTileSize), (int)std::floor(y / kTileSize));
 }
 
 Map::Tile Map::collision(Rect r, double dx, double dy, bool inverted) const {
