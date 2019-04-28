@@ -1,5 +1,6 @@
 #include "level_screen.h"
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 
@@ -82,19 +83,32 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
     p.jump();
   }
 
+  if (input.key_pressed(Input::Button::B)) {
+    p.shoot();
+  }
+
   p1_.update(map_, elapsed);
   p2_.update(map_, elapsed);
 
   for (auto& enemy : enemies_) {
     enemy.update(map_, elapsed);
-    if (enemy.collision(p1_.hitbox())) {
+    if (p1_.check_fireballs(enemy.hitbox())) {
+      enemy.kill();
+    } else if (p2_.check_fireballs(enemy.hitbox())) {
+      enemy.kill();
+    } else if (enemy.collision(p1_.hitbox())) {
       p1_.kill();
-      // p2_.grant_fireballs();
+      p2_.grant_fireballs();
     } else if (enemy.collision(p2_.hitbox())) {
       p2_.kill();
-      // p1_.grant_fireballs();
+      p1_.grant_fireballs();
     }
   }
+
+  enemies_.erase(std::remove_if(
+        enemies_.begin(), enemies_.end(),
+        [](const Enemy& e){ return e.dead(); }),
+      enemies_.end());
 
   if (p1_.on_spikes(map_)) {
     p1_.kill();

@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vector>
+
 #include "text.h"
 
 #include "character.h"
+#include "fireball.h"
 
 class Player : public Character {
   public:
@@ -19,11 +22,13 @@ class Player : public Character {
     void move_right();
     void stop_moving();
     void jump();
+    void shoot();
 
     bool on_spikes(const Map& map) const;
+    bool check_fireballs(const Rect& r) const;
 
-    void kill();
     void grant_big_jump();
+    void grant_fireballs();
 
     Rect hitbox() const override;
 
@@ -40,9 +45,11 @@ class Player : public Character {
 
     Text text_;
     double vx_, vy_, ax_;
-    bool grounded_, big_jump_;
+    bool grounded_, big_jump_, fireballs_;
     int timer_, powerup_timer_;
+    int fireball_cooldown_;
     std::string powerup_text_;
+    std::vector<Fireball> bullets_;
 
 #ifndef NDEBUG
     SDL_Rect xcol_, ycol_;
@@ -50,6 +57,8 @@ class Player : public Character {
 
     void updatex(const Map& map, unsigned int elapsed);
     void updatey(const Map& map, unsigned int elapsed);
+    void powerup(const std::string& description);
+
     Rect boxh() const;
     Rect boxv() const;
     int sprite() const override;

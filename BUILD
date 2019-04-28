@@ -95,11 +95,13 @@ cc_library(
     srcs = [
         "character.cc",
         "enemy.cc",
+        "fireball.cc",
         "player.cc",
     ],
     hdrs = [
         "character.h",
         "enemy.h",
+        "fireball.h",
         "player.h"
     ],
     deps = [

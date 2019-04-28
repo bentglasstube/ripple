@@ -1,11 +1,12 @@
 #include "player.h"
 
+#include <algorithm>
 #include <cmath>
 
 Player::Player(bool inverted, double x, double y) :
   Character("chars.png", kHeight, inverted, x, y), text_("text.png"),
   vx_(0), vy_(0), ax_(0),
-  grounded_(false), big_jump_(false),
+  grounded_(false), big_jump_(false), fireballs_(false),
   timer_(0), powerup_timer_(0),
   powerup_text_("")
 #ifndef NDEBUG
@@ -14,8 +15,9 @@ Player::Player(bool inverted, double x, double y) :
 {}
 
 void Player::update(const Map& map, unsigned int elapsed) {
-  if (powerup_timer_ > 0) powerup_timer_ -= elapsed;
   timer_ += elapsed;
+  if (powerup_timer_ > 0) powerup_timer_ -= elapsed;
+  if (fireball_cooldown_ > 0) fireball_cooldown_ -= elapsed;
 
   if (dead_) return;
 
@@ -58,6 +60,10 @@ void Player::draw(Graphics& graphics, int xo, int yo) const {
   if (powerup_timer_ > 0) {
     text_.draw(graphics, powerup_text_, 128, inverted_ ? 200 : 24, Text::Alignment::Center);
   }
+
+  for (const auto& b : bullets_) {
+    b.draw(graphics, xo, yo);
+  }
 }
 
 bool Player::grounded() const {
@@ -92,6 +98,12 @@ void Player::jump() {
   }
 }
 
+void Player::shoot() {
+  if (dead_ || !fireballs_ || fireball_cooldown_ > 0) return;
+  bullets_.emplace_back(inverted_, x_ + (facing_ == Facing::Left ? -6 : 6), y_ + (inverted_ ? 20 : -20), facing_);
+  fireball_cooldown_ = 150;
+}
+
 bool Player::on_spikes(const Map& map) const {
   if (dead_) return false;
 
@@ -101,14 +113,23 @@ bool Player::on_spikes(const Map& map) const {
   return false;
 }
 
-void Player::kill() {
-  dead_ = true;
+bool Player::check_fireballs(const Rect& r) const {
+  for (auto& b : bullets_) {
+    if (b.collision(r)) return true;
+  }
+  return false;
 }
 
 void Player::grant_big_jump() {
+  if (big_jump_) return;
   big_jump_ = true;
-  powerup_timer_ = 2500;
-  powerup_text_ = "Big Jump";
+  powerup("Big Jump");
+}
+
+void Player::grant_fireballs() {
+  if (fireballs_) return;
+  fireballs_ = true;
+  powerup("Fireballs");
 }
 
 Rect Player::hitbox() const {
@@ -134,6 +155,15 @@ void Player::updatex(const Map& map, unsigned int elapsed) {
   } else {
     x_ += vx_ * elapsed;
   }
+
+  for (auto& fb : bullets_) {
+    fb.update(map, elapsed);
+  }
+
+  bullets_.erase(std::remove_if(
+        bullets_.begin(), bullets_.end(),
+        [](const Fireball& b){ return b.dead(); }),
+      bullets_.end());
 }
 
 void Player::updatey(const Map& map, unsigned int elapsed) {
@@ -169,6 +199,11 @@ void Player::updatey(const Map& map, unsigned int elapsed) {
   } else {
     y_ += vy_ * elapsed;
   }
+}
+
+void Player::powerup(const std::string& description) {
+  powerup_timer_ = 2500;
+  powerup_text_ = description;
 }
 
 Rect Player::boxh() const {

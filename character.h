@@ -24,6 +24,7 @@ class Character {
     bool collision(const Rect& other) const;
 
     void flip();
+    void kill();
 
   protected:
 

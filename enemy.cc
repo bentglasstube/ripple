@@ -8,7 +8,7 @@ void Enemy::update(const Map& map, unsigned int elapsed) {
 
   if (type_ == Type::Goomba) {
 
-    const double tx = x_ + kGoombaSpeed * (facing_ == Facing::Left ? -1 : 1);
+    const double tx = x_ + elapsed * kGoombaSpeed * (facing_ == Facing::Left ? -1 : 1);
     const double ty = y_ + (inverted_ ? -2 : 2);
     const Map::Tile t = map.tile(tx, ty);
 

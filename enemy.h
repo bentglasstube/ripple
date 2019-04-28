@@ -10,15 +10,15 @@ class Enemy : public Character {
     Enemy(Type type, bool inverted, double x, double y);
 
     void update(const Map& map, unsigned int elapsed) override;
+    Rect hitbox() const override;
 
   private:
 
-    static constexpr double kGoombaSpeed = 0.4;
-    static constexpr double kSparkSpeed = 1.5;
+    static constexpr double kGoombaSpeed = 0.04;
+    static constexpr double kSparkSpeed = 0.15;
 
     Type type_;
     int timer_;
 
     int sprite() const override;
-    Rect hitbox() const override;
 };

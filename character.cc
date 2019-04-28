@@ -45,6 +45,10 @@ void Character::flip() {
   facing_ = facing_ == Facing::Left ? Facing::Right : Facing::Left;
 }
 
+void Character::kill() {
+  dead_ = true;
+}
+
 int Character::drawx() const {
   return x_ - 8;
 }

@@ -9,7 +9,7 @@ git_repository(
 git_repository(
     name = "mxebzl",
     remote = "https://github.com/cfrantz/mxebzl.git",
-    tag = "20170703_RC03",
+    tag = "20181103_RC02",
 )
 
 load("@mxebzl//tools:repository.bzl", "mxe_compilers")
