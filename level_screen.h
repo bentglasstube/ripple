@@ -4,7 +4,6 @@
 
 #include "screen.h"
 #include "spritemap.h"
-#include "text.h"
 
 #include "camera.h"
 #include "enemy.h"
@@ -15,6 +14,8 @@
 class LevelScreen : public Screen {
   public:
 
+    enum class State { Play, Pause, FadeOut };
+
     LevelScreen(GameState state);
 
     bool update(const Input& input, Audio& audio, unsigned int elapsed) override;
@@ -24,12 +25,15 @@ class LevelScreen : public Screen {
 
   private:
 
+    static constexpr int kFadeTime = 1000;
+
     GameState gs_;
-    Text text_;
+    State state_;
     SpriteMap sprites_;
     Camera camera_;
     Map map_;
     Player p1_, p2_;
     std::vector<Enemy> enemies_;
     bool control_inverted_;
+    int fade_timer_;
 };

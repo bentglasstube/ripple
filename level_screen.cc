@@ -7,10 +7,10 @@
 #include "party_screen.h"
 
 LevelScreen::LevelScreen(GameState state) :
-  gs_(state),
-  text_("text.png"), sprites_("level.png", 4, 16, 16),
+  gs_(state), state_(State::Play),
+  sprites_("level.png", 4, 16, 16),
   camera_(), map_(), p1_(false, 16, 96), p2_(true, 16, 96),
-  control_inverted_(false)
+  control_inverted_(false), fade_timer_(kFadeTime)
 {
   const std::string level_file = "content/level" + std::to_string(gs_.level()) + ".txt";
   std::ifstream reader(level_file);
@@ -109,8 +109,30 @@ LevelScreen::LevelScreen(GameState state) :
 
 bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
-
   if (!audio.music_playing()) audio.play_music("spooky.ogg");
+  if (fade_timer_ > 0) {
+    fade_timer_ -= elapsed;
+    if (fade_timer_ < 0) fade_timer_ = 0;
+  }
+
+  if (state_ == State::FadeOut) {
+    fprintf(stderr, "Fading out: %d\n", fade_timer_);
+    if (fade_timer_ == 0) return false;
+  }
+
+  if (state_ == State::Pause) {
+    if (input.key_pressed(Input::Button::Start)) {
+      state_ = State::Play;
+      audio.music_volume(1.0);
+      return true;
+    }
+  }
+
+  if (input.key_pressed(Input::Button::Start)) {
+    state_ = State::Pause;
+    audio.music_volume(0.5);
+    return true;
+  }
 
   if (input.key_pressed(Input::Button::Select)) {
     control_inverted_ = !control_inverted_;
@@ -189,12 +211,16 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
     p1_.grant_big_jump();
   }
 
-  if (p1_.dead() && p2_.dead()) {
-    return false;
-  } else if (p1_.done() && p2_.done()) {
-    gs_.next_level(!p1_.dead(), !p2_.dead());
-    if (gs_.level() > 10) audio.stop_music();
-    return false;
+  if (state_ == State::Play) {
+    if (p1_.dead() && p2_.dead()) {
+      fade_timer_ = kFadeTime;
+      state_ = State::FadeOut;
+    } else if (p1_.done() && p2_.done()) {
+      gs_.next_level(!p1_.dead(), !p2_.dead());
+      if (gs_.level() > 10) audio.stop_music();
+      fade_timer_ = kFadeTime;
+      state_ = State::FadeOut;
+    }
   }
 
   return true;
@@ -209,9 +235,11 @@ void LevelScreen::draw(Graphics& graphics) const {
     enemy.draw(graphics, camera_.xoffset(), camera_.yoffset());
   }
 
-  if (p1_.at_switch(map_)) text_.draw(graphics, "1!", 0, 0);
-  if (p2_.at_switch(map_)) text_.draw(graphics, "2!", 0, 0);
-
+  if (fade_timer_ > 0) {
+    const double alpha = state_ == State::FadeOut ? (1 - (fade_timer_ / (double) kFadeTime)) : (fade_timer_ / (double) kFadeTime);
+    SDL_Rect r = {0, 0, graphics.width(), graphics.height()};
+    graphics.draw_rect(&r, 255 * alpha, true);
+  }
 }
 
 Screen* LevelScreen::next_screen() const {
