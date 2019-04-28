@@ -5,8 +5,7 @@
 
 Player::Player(bool inverted, double x, double y) :
   Character("chars.png", kHeight, inverted, x, y), text_("text.png"),
-  vx_(0), vy_(0), ax_(0),
-  grounded_(false), big_jump_(false), fireballs_(false),
+  ax_(0), big_jump_(false), fireballs_(false),
   timer_(0), powerup_timer_(0),
   powerup_text_("")
 #ifndef NDEBUG
@@ -150,8 +149,7 @@ void Player::updatex(const Map& map, unsigned int elapsed) {
       (int) (tile.bottom - tile.top)
     };
 #endif
-    x_ = vx_ > 0 ? tile.left - kHalfWidth : tile.right + kHalfWidth;
-    vx_ = 0;
+    bounceh(tile, 0);
   } else {
     x_ += vx_ * elapsed;
   }
@@ -180,22 +178,7 @@ void Player::updatey(const Map& map, unsigned int elapsed) {
       (int) (tile.bottom - tile.top)
     };
 #endif
-    if (inverted_) {
-      if (vy_ > 0) {
-        y_ = tile.top - kHeight;
-      } else {
-        y_ = tile.bottom;
-        grounded_ = true;
-      }
-    } else {
-      if (vy_ > 0) {
-        y_ = tile.top;
-        grounded_ = true;
-      } else {
-        y_ = tile.bottom + kHeight;
-      }
-    }
-    vy_ = 0;
+    bouncev(tile, 0);
   } else {
     y_ += vy_ * elapsed;
   }

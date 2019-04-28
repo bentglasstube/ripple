@@ -44,8 +44,8 @@ class Player : public Character {
     static constexpr int kHeight = 32;
 
     Text text_;
-    double vx_, vy_, ax_;
-    bool grounded_, big_jump_, fireballs_;
+    double ax_;
+    bool big_jump_, fireballs_;
     int timer_, powerup_timer_;
     int fireball_cooldown_;
     std::string powerup_text_;

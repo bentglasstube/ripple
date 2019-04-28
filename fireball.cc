@@ -3,29 +3,32 @@
 Fireball::Fireball(bool inverted, double x, double y, Facing direction) :
   Character("misc.png", 16, inverted, x, y)
 {
-    facing_ = direction;
+    vx_ = kMoveSpeed * (direction == Facing::Left ? -1 : 1);
+    width_ = 4;
 }
 
 void Fireball::update(const Map& map, unsigned int elapsed) {
-  const double dx = kMoveSpeed * elapsed * (facing_ == Facing::Left ? -1 : 1);
-  const double dy = kDropSpeed * elapsed * (inverted_ ? -1 : 1);
+  vy_ += kGravity * elapsed * (inverted_ ? -1 : 1);
 
-  const Map::Tile tx = map.tile(x_ + dx, y_);
+  const Map::Tile tx = map.collision(hitbox(), vx_ * elapsed, 0, inverted_);
   if (tx.type == Map::TileType::OutOfBounds) {
     dead_ = true;
   } else if (tx.obstructs(inverted_)) {
-    x_ = facing_ == Facing::Left ? tx.right : tx.left;
-    flip();
+    fprintf(stderr, "bounce! (%f, %f) (%f)\n", x_, y_, vx_);
+    bounceh(tx, 0.8);
   } else {
-    x_ += dx;
+    x_ += vx_ * elapsed;
   }
 
-  const Map::Tile ty = map.tile(x_, y_ + dy);
-  if (ty.obstructs(inverted_)) {
+  const Map::Tile ty = map.collision(hitbox(), 0, vy_ * elapsed, inverted_);
+  if (ty.type == Map::TileType::OutOfBounds) {
     dead_ = true;
+  } else if (ty.obstructs(inverted_)) {
+    bouncev(ty, 0.6);
   } else {
-    y_ += dy;
+    y_ += vy_ * elapsed;
   }
+
 }
 
 Rect Fireball::hitbox() const {

@@ -1,6 +1,6 @@
 #include "game_state.h"
 
-GameState::GameState() : level_(3) {}
+GameState::GameState() : level_(1) {}
 
 void GameState::next_level() {
   ++level_;

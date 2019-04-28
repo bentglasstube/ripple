@@ -30,13 +30,16 @@ class Character {
 
     enum class Facing { Right, Left };
 
+    int width_, height_;
+    double x_, y_, vx_, vy_;
     SpriteMap sprites_;
-    int height_;
-    double x_, y_;
-    bool inverted_, dead_;
+    bool inverted_, dead_, grounded_;
     Facing facing_;
 
     virtual int drawx() const;
     virtual int drawy() const;
     virtual int sprite() const = 0;
+
+    void bouncev(const Map::Tile& tile, double bounce);
+    void bounceh(const Map::Tile& tile, double bounce);
 };

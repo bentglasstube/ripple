@@ -1,9 +1,9 @@
 #include "character.h"
 
 Character::Character(const std::string& file, int height, bool inverted, double x, double y) :
-  sprites_(file, 4, 16, height),
-  height_(height), x_(x), y_(y),
-  inverted_(inverted), dead_(false),
+  width_(16), height_(height), x_(x), y_(y), vx_(0), vy_(0),
+  sprites_(file, 4, width_, height),
+  inverted_(inverted), dead_(false), grounded_(false),
   facing_(Facing::Right) {}
 
 void Character::draw(Graphics& graphics, int xo, int yo) const {
@@ -55,4 +55,28 @@ int Character::drawx() const {
 
 int Character::drawy() const {
   return y_ - (inverted_ ? 0 : height_);
+}
+
+void Character::bouncev(const Map::Tile& tile, double bounce) {
+  if (inverted_) {
+    if (vy_ > 0) {
+      y_ = tile.top - height_;
+    } else {
+      y_ = tile.bottom;
+      grounded_ = true;
+    }
+  } else {
+    if (vy_ > 0) {
+      y_ = tile.top;
+      grounded_ = true;
+    } else {
+      y_ = tile.bottom + height_;
+    }
+  }
+  vy_ *= -bounce;
+}
+
+void Character::bounceh(const Map::Tile& tile, double bounce) {
+  x_ = vx_ > 0 ? tile.left - width_ / 2: tile.right + width_ / 2;
+  vx_ *= -bounce;
 }

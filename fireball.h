@@ -12,8 +12,8 @@ class Fireball : public Character {
 
   private:
 
-    static constexpr double kMoveSpeed = 0.11;
-    static constexpr double kDropSpeed = 0.04;
+    static constexpr double kGravity = 0.0003;
+    static constexpr double kMoveSpeed = 0.23;
 
     int drawx() const override;
     int drawy() const override;
