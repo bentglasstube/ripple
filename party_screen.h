@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "screen.h"
+#include "text.h"
 
 #include "game_state.h"
 #include "map.h"
@@ -21,6 +22,7 @@ class PartyScreen : public Screen {
 
   private:
 
+    Text text_;
     GameState gs_;
     Map map_;
     std::vector<Player> peeps_;
