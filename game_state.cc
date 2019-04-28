@@ -12,6 +12,10 @@ void GameState::next_level(bool normal, bool invert) {
   if (invert) ++saved_invert_;
 }
 
+void GameState::add_time(unsigned int elapsed) {
+  elapsed_ += elapsed;
+}
+
 int GameState::level() const {
   return level_;
 }
@@ -22,4 +26,8 @@ int GameState::saved_normal() const {
 
 int GameState::saved_invert() const {
   return saved_invert_;
+}
+
+unsigned long GameState::time() const {
+  return elapsed_;
 }

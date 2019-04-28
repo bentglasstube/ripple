@@ -15,7 +15,7 @@ PartyScreen::PartyScreen(GameState state) : gs_(state) {
   std::uniform_real_distribution<double> block(0, 1);
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
-      map_.set_tile(x, y, (x == 0 || y == 0 || x == width - 1 || y == height - 1 || block(rand_) < 0.05) ? Map::TileType::Bricks : Map::TileType::Neutral);
+      map_.set_tile(x, y, (x == 0 || y == 0 || x == width - 1 || y == height - 1 || block(rand_) < 0.15) ? Map::TileType::Bricks : Map::TileType::Neutral);
     }
   }
 

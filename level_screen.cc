@@ -76,6 +76,8 @@ LevelScreen::LevelScreen(GameState state) :
 }
 
 bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+  gs_.add_time(elapsed);
+
   if (input.key_pressed(Input::Button::Select)) {
     control_inverted_ = !control_inverted_;
   }
