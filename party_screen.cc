@@ -5,7 +5,6 @@
 
 #include "util.h"
 
-#include "fireball.h"
 #include "title_screen.h"
 
 PartyScreen::PartyScreen(GameState state) : text_("text.png"), gs_(state) {
@@ -49,14 +48,6 @@ bool PartyScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
     }
   }
 
-  if (p(rand_) < 0.1) {
-    fireworks_.emplace_back(p(rand_) < 0.5, p(rand_) * 224 + 16, p(rand_) * 208 + 16, p(rand_) < 0.5 ? Character::Facing::Left : Character::Facing::Right);
-  }
-
-  for (auto& f : fireworks_) {
-    f.update(map_, elapsed);
-  }
-
   if (input.key_pressed(Input::Button::Start)) {
     audio.stop_music();
     return false;
@@ -70,10 +61,6 @@ void PartyScreen::draw(Graphics& graphics) const {
 
   for (const auto& peep : peeps_) {
     peep.draw(graphics, 0, 0);
-  }
-
-  for (const auto& f :fireworks_) {
-    f.draw(graphics, 0, 0);
   }
 
   std::ostringstream timer;

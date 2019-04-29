@@ -5,6 +5,8 @@ class GameState {
 
     GameState();
 
+    static constexpr int kMaxLevel = 10;
+
     void next_level(bool normal, bool invert);
     void add_time(unsigned int elapsed);
 

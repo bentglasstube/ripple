@@ -94,7 +94,9 @@ LevelScreen::LevelScreen(GameState state) :
         case 'S':
           {
             const bool i = line[x] == 'S';
-            map_.set_tile(x, height, i ? Map::TileType::InvEmpty : Map::TileType::Empty);
+            Map::TileType t = i ? Map::TileType::InvEmpty : Map::TileType::Empty;
+            if (line[x - 1] == '\'') t = Map::TileType::Neutral;
+            map_.set_tile(x, height, t);
             enemies_.emplace_back(Enemy::Type::Spark, i, x * 16 + 8, height * 16 + (i ? 0 : 16));
           }
           break;
@@ -219,7 +221,7 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
       state_ = State::FadeOut;
     } else if (p1_.done() && p2_.done()) {
       gs_.next_level(!p1_.dead(), !p2_.dead());
-      if (gs_.level() > 10) audio.stop_music();
+      if (gs_.level() > GameState::kMaxLevel) audio.stop_music();
       fade_timer_ = kFadeTime / 2;
       state_ = State::FadeOut;
     }
@@ -253,6 +255,6 @@ void LevelScreen::draw(Graphics& graphics) const {
 }
 
 Screen* LevelScreen::next_screen() const {
-  if (gs_.level() > 10) return new PartyScreen(gs_);
+  if (gs_.level() > GameState::kMaxLevel) return new PartyScreen(gs_);
   return new LevelScreen(gs_);
 }
