@@ -1,6 +1,7 @@
 #include "enemy.h"
 
 #include <cassert>
+#include <cmath>
 
 Enemy::Enemy(Type type, bool inverted, double x, double y) :
   Character("enemies.png", 16, inverted, x, y), type_(type), timer_(0) {
