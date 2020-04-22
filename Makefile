@@ -7,13 +7,16 @@ OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
 NAME=ripple
 APP_NAME="Ripple"
 
-CC=g++
+CC=$(CROSS)g++
+LD=$(CROSS)ld
+AR=$(CROSS)ar
+PKG_CONFIG=$(CROSS)pkg-config
 CFLAGS=-O3 --std=c++17 -Wall -Wextra -Werror -pedantic -I ~/source/gam -DNDEBUG
 
 ifeq ($(UNAME), Linux)
 	PACKAGE=$(NAME)-linux.tgz
 	LDFLAGS=-static-libstdc++ -static-libgcc
-	LDLIBS=`sdl2-config --cflags --libs` -lSDL2_mixer -lSDL2_image -L/home/alan/source/gam -lgam
+	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -L/home/alan/source/gam -Wl,-Bstatic -lgam
 endif
 ifeq ($(UNAME), Darwin)
 	PACKAGE=$(NAME)-osx.tgz
@@ -48,6 +51,14 @@ $(NAME)-osx.tgz: $(APP_NAME).app
 	mkdir $(NAME)
 	cp -r $(APP_NAME).app $(NAME)/.
 	tar zcf $@ $(NAME)
+	rm -rf $(NAME)
+
+$(NAME)-windows.zip: $(EXECUTABLE)
+	mkdir $(NAME)
+	cp $(EXECUTABLE) $(NAME)/`basename $(EXECUTABLE)`.exe
+	cp -R content $(NAME)/content
+	# TODO set up dlls and shit
+	zip -r $@ $(NAME)
 	rm -rf $(NAME)
 
 $(APP_NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist
