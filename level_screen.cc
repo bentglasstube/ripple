@@ -111,7 +111,6 @@ LevelScreen::LevelScreen(GameState state) :
 
 bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
-  if (!audio.music_playing()) audio.play_music("spooky.ogg", true);
 
   if (fade_timer_ > 0) {
     fade_timer_ -= elapsed;
@@ -222,7 +221,6 @@ bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
       state_ = State::FadeOut;
     } else if (p1_.done() && p2_.done()) {
       gs_.next_level(!p1_.dead(), !p2_.dead());
-      if (gs_.level() > GameState::kMaxLevel) audio.stop_music();
       fade_timer_ = kFadeTime / 2;
       state_ = State::FadeOut;
     }

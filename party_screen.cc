@@ -31,10 +31,8 @@ PartyScreen::PartyScreen(GameState state) : text_("text.png"), gs_(state) {
   }
 }
 
-bool PartyScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+bool PartyScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   std::uniform_real_distribution<double> p(0, 1);
-
-  if (!audio.music_playing()) audio.play_music("party.ogg", true);
 
   for (auto& peep : peeps_) {
     peep.update(map_, elapsed);
@@ -48,12 +46,7 @@ bool PartyScreen::update(const Input& input, Audio& audio, unsigned int elapsed)
     }
   }
 
-  if (input.key_pressed(Input::Button::Start)) {
-    audio.stop_music();
-    return false;
-  }
-
-  return true;
+  return !input.key_pressed(Input::Button::Start);
 }
 
 void PartyScreen::draw(Graphics& graphics) const {
