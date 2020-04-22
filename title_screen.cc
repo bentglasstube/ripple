@@ -8,7 +8,7 @@ TitleScreen::TitleScreen(GameState state) :
 bool TitleScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   timer_ = (timer_ + elapsed) % 1000;
 
-  if (!audio.music_playing()) audio.play_music("title.ogg");
+  audio.play_music("title.ogg", true);
 
   if (input.key_pressed(Input::Button::A) || input.key_pressed(Input::Button::Start)) {
     audio.stop_music();

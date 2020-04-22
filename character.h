@@ -14,6 +14,7 @@ class Character {
     enum class Facing { Right, Left };
 
     Character(const std::string& file, int height, bool inverted, double x, double y);
+    virtual ~Character() {}
 
     virtual void update(const Map& map, unsigned int elapsed) = 0;
     virtual void draw(Graphics& graphics, int xo, int yo) const;

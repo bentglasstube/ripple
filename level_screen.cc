@@ -111,7 +111,7 @@ LevelScreen::LevelScreen(GameState state) :
 
 bool LevelScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   gs_.add_time(elapsed);
-  if (!audio.music_playing()) audio.play_music("spooky.ogg");
+  audio.play_music("spooky.ogg", true);
   if (fade_timer_ > 0) {
     fade_timer_ -= elapsed;
     if (fade_timer_ < 0) fade_timer_ = 0;

@@ -34,7 +34,7 @@ PartyScreen::PartyScreen(GameState state) : text_("text.png"), gs_(state) {
 bool PartyScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   std::uniform_real_distribution<double> p(0, 1);
 
-  if (!audio.music_playing()) audio.play_music("party.ogg");
+  audio.play_music("party.ogg", true);
 
   for (auto& peep : peeps_) {
     peep.update(map_, elapsed);
